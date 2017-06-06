@@ -14,9 +14,49 @@ var express 	= require('express'),
 	employeeProfileModel = require('./api/models/EmployeeProfileModel'),
 	jobModel = require('./api/models/jobModel');
 
+
+var Db = require('mongodb').Db,
+    mongoose = require('mongoose'),
+    Server = require('mongodb').Server;
+    // ReplSetServers = require('mongodb').ReplSetServers,
+    // ObjectID = require('mongodb').ObjectID,
+    // Binary = require('mongodb').Binary,
+    // GridStore = require('mongodb').GridStore,
+    // Grid = require('mongodb').Grid,
+    // Code = require('mongodb').Code,
+    // BSON = require('mongodb').pure().BSON,
+    var assert = require('assert');
 	var cors = require("cors");
-	
-	app.options('*', cors()); 
+
+var db = new Db('gdp-server', new Server('ds111882.mlab.com', 11882));
+// Establish connection to db
+db.open(function(err, db) {
+
+  // Use the admin database for the operation
+  var adminDb = db.admin();
+
+
+  // Add the new user to the admin database
+  adminDb.addUser('gdpserver2', 'gdpserver2', function(err, result) {
+
+    // Authenticate using the newly added user
+    adminDb.authenticate('gdpserver2', 'gdpserver2', function(err, result) {
+      //assert.ok(result);
+
+      // Retrive the build information for the MongoDB instance
+      adminDb.buildInfo(function(err, info) {
+       // assert.ok(err == null);
+
+        //adminDb.removeUser('admin3', function(err, result) {
+        //  assert.ok(result);
+
+         // db.close();
+        //});
+      });
+    });
+  });
+});
+app.options('*', cors()); 
 
 var options = { server: { socketOptions: { keepAlive: 300000, connectTimeoutMS: 30000 } }, 
                 replset: { socketOptions: { keepAlive: 300000, connectTimeoutMS : 30000 } } }; 
