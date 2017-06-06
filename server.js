@@ -11,6 +11,8 @@ var express 	= require('express'),
 	customerProfileModel = require('./api/models/customerProfileModel');
 	productUsageModel = require('./api/models/ProductUsageModel');
 	employeeProfileModel = require('./api/models/EmployeeProfileModel');
+	jobModel = require('./api/models/jobModel');
+
 	var cors = require("cors");
 	
 	app.options('*', cors()); 

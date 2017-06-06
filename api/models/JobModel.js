@@ -1,5 +1,7 @@
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema,
+var Schema = mongoose.Schema;
+var SchemaTypes = mongoose.Schema.Types;
+
 
 var JobSchema = new Schema({
 	JobId:Object,
@@ -9,30 +11,21 @@ var JobSchema = new Schema({
 	Status:String,
 	Remarks:String,
 	JobDetails:[{
-		StartLocation:{
-			[
-				lat:Double,
-				lan:Double
-			]
-		},
-		EndLocation:{
-			[
-				lat:Double,
-				lan:Double
-			]
-		},
-		CancelLocation:{
-			[
-				lat:Double,
-				lan:Double
-			]
-		},
-		PauseLocation:{
-			[
-				lat:Double,
-				lan:Double
-			]
-		},
+		StartLocation:[{
+			    location:String,
+				type:[Number],
+				index:'2d',
+			}],
+		EndLocation:[{
+				location:String,
+				type:[Number],
+				index:'2d',
+			}],
+		CancelLocation:[{
+				location:String,
+				type:[Number],
+				index:'2d',
+			}],	
 		StartDateTime:Date,
 		EndDateTime:Date,
 		CancelDateTime:Date,
