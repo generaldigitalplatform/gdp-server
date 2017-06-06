@@ -8,7 +8,7 @@ var express 	= require('express'),
 
 	//databaseUri = process.env.DATABASE_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/gdmp',
 	// mongodb hosted on heroku
-	databaseUri='mongodb://gdp-server-user:gdp-server-password@ds111882.mlab.com:11882/gdp-server';
+	databaseUri='mongodb://gdpserver:gdpserver@ds111882.mlab.com:11882/gdp-server?authMechanism=SCRAM-SHA-1';
 	customerProfileModel = require('./api/models/customerProfileModel');
 	productUsageModel = require('./api/models/ProductUsageModel');
 	employeeProfileModel = require('./api/models/EmployeeProfileModel');
@@ -34,8 +34,7 @@ app.use('/employee',employeeProfileroutes);
 app.use('/customer',customerProfileroutes);
 app.use('/product',productUsageFeedbackRoutes);
 
-
-var port = process.env.PORT || 3000;
+var port = 3000;
 var httpServer = require('http').createServer(app);
 httpServer.listen(port, function() {
     console.log('gdmp-server running on port ' + port + '.');
