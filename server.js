@@ -8,7 +8,7 @@ var express 	= require('express'),
 
 	//databaseUri = process.env.DATABASE_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/gdmp',
 	// mongodb hosted on heroku
-	databaseUri='mongodb://heroku_9rqt1jt6:sj6a8onc6ttt2dr4tv54o3qgg2@ds113282.mlab.com:13282/heroku_9rqt1jt6'
+	databaseUri='mongodb://gdp-server-user:gdp-server-password@ds111882.mlab.com:11882/gdp-server';
 	customerProfileModel = require('./api/models/customerProfileModel');
 	productUsageModel = require('./api/models/ProductUsageModel');
 	employeeProfileModel = require('./api/models/EmployeeProfileModel');
