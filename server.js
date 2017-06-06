@@ -7,6 +7,7 @@ var express 	= require('express'),
 	//mongo "mongodb://cluster0-shard-00-00-tamev.mongodb.net:27017,cluster0-shard-00-01-tamev.mongodb.net:27017,cluster0-shard-00-02-tamev.mongodb.net:27017/test?replicaSet=Cluster0-shard-0" --authenticationDatabase admin --ssl --username manikandan --password <PASSWORD>
 
 	//databaseUri = process.env.DATABASE_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/gdmp',
+	// mongodb hosted on heroku
 	databaseUri='mongodb://heroku_j8rlcplz:9nv9jie775doiv3lsntbbdfls7@ds111882.mlab.com:11882/heroku_j8rlcplz'
 	customerProfileModel = require('./api/models/customerProfileModel');
 	productUsageModel = require('./api/models/ProductUsageModel');
