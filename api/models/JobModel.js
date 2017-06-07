@@ -11,21 +11,18 @@ var JobSchema = new Schema({
 	Status:String,
 	Remarks:String,
 	JobDetails:[{
-		StartLocation:[{
-			    location:String,
-				type:[Number],
-				index:'2d',
-			}],
-		EndLocation:[{
-				location:String,
-				type:[Number],
-				index:'2d',
-			}],
-		CancelLocation:[{
-				location:String,
-				type:[Number],
-				index:'2d',
-			}],	
+		StartLocation:{
+			    Name: { type: String },
+        		coordinates: []
+			},
+		EndLocation:{
+			 	Name: { type: String },
+        		coordinates: []
+			},
+		CancelLocation:{
+ 				Name: { type: String },
+        		coordinates: []
+			},	
 		StartDateTime:Date,
 		EndDateTime:Date,
 		CancelDateTime:Date,

@@ -1,5 +1,6 @@
 var mongoose = require('mongoose'),
 	customerProfileModel = mongoose.model('CustomerProfile');
+var ObjectId = require('mongoose').Types.ObjectId;
 
 exports.createNewCustomerProfile = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
@@ -23,8 +24,10 @@ exports.findAllCustomerProfile = function(req,res){
 exports.findCustomerProfileById = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	//var query = {_id:req.params.Id};
-	var query = {"PrimaryPhone":req.params.Id};
+
+	var customerObjId = new ObjectId(req.params.Id);
+	var query = {$or:[{"_id":customerObjId},{"PrimaryPhone":req.params.Id},{"SecondaryPhone":req.params.Id},{'ContactAddress.Pincode':req.params.Id},{'ContactAddress.City':req.params.Id},{'ContactAddress.Zone':req.params.Id},{'ContactAddress.State':req.params.Id},{'ContactAddress.Area':req.params.Id}]};
+	
 	customerProfileModel.findOne(query,function(err,profile){
 		if (err) res.send(err);;
 		if(profile)
@@ -36,9 +39,12 @@ exports.findCustomerProfileById = function(req,res){
 exports.updateCustomerProfileById = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	var query = {"PrimaryPhone":req.params.Id};
+	
 	var updateData = req.body;
 	var options = {upsert:true,new: true};
+	
+	var customerObjId = new ObjectId(req.params.Id);
+	var query = {$or:[{"_id":customerObjId},{"PrimaryPhone":req.params.Id},{"SecondaryPhone":req.params.Id},{'ContactAddress.Pincode':req.params.Id},{'ContactAddress.City':req.params.Id},{'ContactAddress.Zone':req.params.Id},{'ContactAddress.State':req.params.Id},{'ContactAddress.Area':req.params.Id}]};
 	
 	customerProfileModel.findOneAndUpdate(query,{$set:updateData},options,function(err,profile){
 		if (err) res.send(err);;

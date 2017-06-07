@@ -1,6 +1,6 @@
 var mongoose = require('mongoose'),
 	employeeProfileModel = mongoose.model('EmployeeProfile');
-	ObjectId = mongoose.Types.ObjectId;
+var ObjectId = require('mongoose').Types.ObjectId;
 
 exports.findAllEmployeeProfile = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
@@ -14,10 +14,11 @@ exports.findAllEmployeeProfile = function(req,res){
 exports.findEmployeeProfileById = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	var query = {"PrimaryPhone":req.params.Id};
+	var employeeObjId = new ObjectId(req.params.Id);
+	var query = {$or:[{"_id":employeeObjId},{"EmployeeId":req.params.Id},{"PrimaryPhone":req.params.Id},{"SecondaryPhone":req.params.Id},{'ContactAddress.Pincode':req.params.Id},{'ContactAddress.City':req.params.Id},{'ContactAddress.Zone':req.params.Id},{'ContactAddress.State':req.params.Id},{'ContactAddress.Area':req.params.Id}]};
+	
 	employeeProfileModel.findOne(query,function(err,profile){
-		if (err) res.send(err);;
-		if (err) res.send(err);;
+		if (err) res.send(err);
 		if(profile)
 		{
 			res.json(profile);

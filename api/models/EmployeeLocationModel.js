@@ -1,17 +1,16 @@
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema,
-	ObjectId = Schema.ObjectId;
+var Schema = mongoose.Schema;
 
 var EmployeeLocationSchema = new Schema({
-	EmployeeId:ObjectId,
+	EmployeeId:Number,
 	TrackDateTime:Date,
 	Status:String,
-	Location:{
-		[
-			lat:Double,
-			lan:Double
-		]
-	}
+	CurrentLocation:[{	
+	  			Name: { type: String },		  
+				coordinates:[Number]				
+			}]	
 },{"strict":false});
+
+EmployeeLocationSchema.index({ "Location": "2dsphere" });
 
 module.exports = mongoose.model('EmployeeLocation',EmployeeLocationSchema);

@@ -35,7 +35,7 @@ var EmployeeProfileSchema = new Schema({
 		Pincode:String,
 		Landmark:String
 	}],
-	CommunicationDetails:[{
+	SocialCommunication:[{
 		Email:String,
 		WhatsApp:String,
 		Facebook:String,
