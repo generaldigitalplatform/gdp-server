@@ -9,7 +9,8 @@ var express 	= require('express'),
 
 	//databaseUri = process.env.DATABASE_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/gdmp',
 	// mongodb hosted on heroku
-	databaseUri='mongodb://gdpserver:gdpserver@ds111882.mlab.com:11882/gdp-server?authMechanism=SCRAM-SHA-1',
+	//databaseUri='mongodb://gdpserver:gdpserver@ds111882.mlab.com:11882/gdp-server?authMechanism=SCRAM-SHA-1',
+	databaseUri = 'mongodb://gdpserver:gdpserver@ds111882.mlab.com:11882/heroku_fw10lrf3?authMechanism=SCRAM-SHA-1',
 	customerProfileModel = require('./api/models/customerProfileModel'),
 	productUsageModel = require('./api/models/ProductUsageModel'),
 	employeeProfileModel = require('./api/models/EmployeeProfileModel'),
