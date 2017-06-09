@@ -11,9 +11,10 @@ router.delete('/profile/:Id', customerProfileController.deleteCustomerProfileByI
 router.put('/profile/:Id',customerProfileController.updateCustomerProfileById);
 
 router.get('/feedback', customerFeedbackController.findAllCustomerFeedback);
+router.get('/feedback/:Id', customerFeedbackController.findCustomerFeedbackById);
 router.post('/feedback', customerFeedbackController.createNewCustomerFeedback);
 router.delete('/feedback', customerFeedbackController.deleteAllCustomerFeedback);
-
+router.put('/feedback/:Id',customerFeedbackController.updateCustomerFeedbackById);
 
 
 module.exports = router;
