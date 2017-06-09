@@ -69,16 +69,20 @@ exports.deleteAllCustomerFeedback = function(req,res){
 			}
 		});
 	};
-// exports.deleteCustomerProfileById = function(req,res){
-// 	res.header("Access-Control-Allow-Origin", "*");
-//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-// 	//var query = {_id:req.params.Id};
-// 	var query = {"PrimaryPhone":req.params.Id};
-// 	customerFeedbackModel.findOneAndRemove(query,function(err,feedback){
-// 		if (err) res.send(err);;
-// 		if(feedback)
-// 		{
-// 			res.json(feedback);
-// 		}
-// 	});
-// };
+exports.deleteCustomerFeedbackById = function(req,res){
+	res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	var updateData = req.body;
+	var options = {upsert:true,new: false};
+	
+	var customerFeedbackObjId = new ObjectId((req.params.Id.length < 12) ? "123456789012" : req.params.Id);
+	var query = {$or:[{"_id":customerFeedbackObjId},{"PrimaryPhone":req.params.Id},{"SecondaryPhone":req.params.Id},{'ContactAddress.Pincode':req.params.Id},{'ContactAddress.City':req.params.Id},{'ContactAddress.Zone':req.params.Id},{'ContactAddress.State':req.params.Id},{'ContactAddress.Area':req.params.Id}]};	
+
+	customerFeedbackModel.findOneAndRemove(query,function(err,feedback){
+		if (err) res.send(err);;
+		if(feedback)
+		{
+			res.json(feedback);
+		}
+	});
+};

@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var EmployeeLocationSchema = new Schema({
-	EmployeeId:Number,
+	EmployeeId:Object,
 	TrackDateTime:Date,
 	Status:String,
 	CurrentLocation:[{	
