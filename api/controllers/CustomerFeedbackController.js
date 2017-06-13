@@ -50,7 +50,7 @@ exports.updateCustomerFeedbackById = function(req,res){
 	var customerFeedbackObjId = new ObjectId((req.params.Id.length < 12) ? "123456789012" : req.params.Id);
 	var query = {$or:[{"_id":req.params.Id},{"PrimaryPhone":req.params.Id},{"SecondaryPhone":req.params.Id},{'ContactAddress.Pincode':req.params.Id},{'ContactAddress.City':req.params.Id},{'ContactAddress.Zone':req.params.Id},{'ContactAddress.State':req.params.Id},{'ContactAddress.Area':req.params.Id}]};
 	
-	customerFeedbackModel.findOneAndUpdate(query,{$add:updateData},options,function(err,feedback){
+	customerFeedbackModel.findOneAndUpdate(query,{$set:updateData},options,function(err,feedback){
 		if (err) res.send(err);;
 		if(feedback)
 		{

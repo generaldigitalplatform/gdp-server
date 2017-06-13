@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var CustomerFeedbackSchema = new Schema({
+	CustomerId:Object,
 	Industry:[{
 		Name:String,
 		Company:[{

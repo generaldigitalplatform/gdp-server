@@ -47,14 +47,6 @@ exports.updateJobById = function(req,res){
 	var jobObjId = new ObjectId((req.params.Id.length < 12) ? "123456789012" : req.params.Id);
 	var query = {$or:[{"_id":jobObjId},{"JobId":req.params.Id},{"PrimaryPhone":req.params.Id},{"SecondaryPhone":req.params.Id},{'ContactAddress.Pincode':req.params.Id},{'ContactAddress.City':req.params.Id},{'ContactAddress.Zone':req.params.Id},{'ContactAddress.State':req.params.Id},{'ContactAddress.Area':req.params.Id}]};	
 
-	jobModel.findOne(query,function(err,profile){
-		if (err) res.send(err);;
-		if(profile)
-		{
-			res.json(profile);
-		}
-	});
-
 	jobModel.findOneAndUpdate(query,{$set:updateData},options,function(err,profile){
 		if (err) res.send(err);;
 		if(profile)
@@ -63,6 +55,17 @@ exports.updateJobById = function(req,res){
 		}
 	});
 };
+
+// 	Model.findOneAndUpdate({ "_id": bookId }, { "$set": { "name": name, "genre": genre, "author": author, "similar": similar}}).exec(function(err, book){
+//    if(err) {
+//        console.log(err);
+//        res.status(500).send(err);
+//    } else {
+//             res.status(200).send(book);
+//    }
+// });
+
+
 exports.deleteAllJobs = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");

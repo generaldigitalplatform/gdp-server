@@ -7,29 +7,41 @@ var JobSchema = new Schema({
 	JobId:Object,
 	CustomerId:Object,
 	EmployeeId:Object,
-	EmployeeName:String ,
-	Status:String,
-	Remarks:String,
+	EmployeeName:String,
 	JobDetails:[{
-		StartLocation:{
-			    Name: { type: String },
-        		coordinates: []
-			},
-		EndLocation:{
-			 	Name: { type: String },
-        		coordinates: []
-			},
-		CancelLocation:{
- 				Name: { type: String },
-        		coordinates: []
-			},	
-		StartDateTime:Date,
-		EndDateTime:Date,
-		CancelDateTime:Date,
-		PauseDateTime:Date,
-		Reason:String,
-		Remarks:String
+		JobTitle:String,
+		JobDescription:String,
+		StartJob: [{
+	    type: {
+	      type: "String",
+	      required: true,
+	      enum: ['Point', 'LineString', 'Polygon'],
+	      default: 'Point'
+	    },
+	    Coordinates:{
+	        type: [Number]
+	    },
+	    Area:String,
+	    DateTime:Date,
+	    Status:String
+	}],
+		EndJob: [{
+	    type: {
+	      type: "String",
+	      required: true,
+	      enum: ['Point', 'LineString', 'Polygon'],
+	      default: 'Point'
+	    },
+	    Coordinates:{
+	        type: [Number]
+	    },
+	    Area:String,
+	   	DateTime:Date,
+	   	Status:String
+	}],
+		Feedback:String
 	}]	
 },{"strict":false});
 
+JobSchema.index({ 'StartJob': '2dsphere','EndJob': '2dsphere' });
 module.exports = mongoose.model('Job',JobSchema);

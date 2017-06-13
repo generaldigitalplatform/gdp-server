@@ -3,23 +3,22 @@ var Schema = mongoose.Schema;
 var ObjectId = mongoose.Schema.Types.ObjectId;
 
 var EmployeeLocationSchema = new Schema({
-	EmployeeId:Object,
-	TrackDateTime:Date,
+	EmployeeId:Object,	
 	Status:String,
-	LocationName:String,
-	geo: {
+	CurrentLocation:[{
 	    type: {
 	      type: "String",
 	      required: true,
 	      enum: ['Point', 'LineString', 'Polygon'],
 	      default: 'Point'
 	    },
-    coordinates: {
-        type: [Number]
+   	Coordinates: {
+        type: [Number],
+    Area:String,
+    TrackDateTime:Date
     }
-}
-
+}]
 },{"strict":false});
 
-EmployeeLocationSchema.index({ 'geo': '2dsphere' });
+EmployeeLocationSchema.index({ 'CurrentLocation': '2dsphere' });
 module.exports = mongoose.model('EmployeeLocation',EmployeeLocationSchema);
