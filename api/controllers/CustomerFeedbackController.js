@@ -33,7 +33,7 @@ exports.findCustomerFeedbackById = function(req,res){
 	var query = {$or:[{"CustomerId":customerFeedbackObjId},{"_id":customerFeedbackObjId},{"PrimaryPhone":req.params.Id},{"SecondaryPhone":req.params.Id},{'ContactAddress.Pincode':req.params.Id},{'ContactAddress.City':req.params.Id},{'ContactAddress.Zone':req.params.Id},{'ContactAddress.State':req.params.Id},{'ContactAddress.Area':req.params.Id}]};
 	
 	customerFeedbackModel.findOne(query,function(err,feedback){
-		if (err) res.send(err);;
+		if (err) res.send(err);
 		if(feedback)
 		{
 			res.json(feedback);

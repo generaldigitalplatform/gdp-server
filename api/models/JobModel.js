@@ -7,11 +7,15 @@ var JobSchema = new Schema({
 	JobId:Object,
 	CustomerId:Object,
 	EmployeeId:Object,
-	EmployeeName:String,
+	EmployeeName:String,	
 	JobDetails:[{
 		JobTitle:String,
 		JobDescription:String,
-		StartJob: [{
+		JobDateTime:Date,
+		JobLocation:String,
+		JobStatus:String,
+		Feedback:String,
+		StartedJob: [{
 	    type: {
 	      type: "String",
 	      required: true,
@@ -22,26 +26,25 @@ var JobSchema = new Schema({
 	        type: [Number]
 	    },
 	    Area:String,
-	    DateTime:Date,
-	    Status:String
-	}],
-		EndJob: [{
-	    type: {
-	      type: "String",
-	      required: true,
-	      enum: ['Point', 'LineString', 'Polygon'],
-	      default: 'Point'
-	    },
-	    Coordinates:{
-	        type: [Number]
-	    },
-	    Area:String,
-	   	DateTime:Date,
-	   	Status:String
-	}],
-		Feedback:String
-	}]	
+	    DateTime:Date
+		}],
+		ReachedLocation: [{
+		    type: {
+		      type: "String",
+		      required: true,
+		      enum: ['Point', 'LineString', 'Polygon'],
+		      default: 'Point'
+		    },
+		    Coordinates:{
+		        type: [Number]
+		    },
+		    Area:String,
+		    DateTime:Date	
+		}],
+		DoneJob: [{
+			DateTime:Date	    
+   			 }]
+		}]	
 },{"strict":false});
-
-JobSchema.index({ 'StartJob': '2dsphere','EndJob': '2dsphere' });
+JobSchema.index({ 'StartedJob': '2dsphere','ReachedLocation': '2dsphere' });
 module.exports = mongoose.model('Job',JobSchema);

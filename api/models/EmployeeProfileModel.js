@@ -47,11 +47,26 @@ var EmployeeProfileSchema = new Schema({
 		University:String,
 		Year:String			
 	}],	
+	WorkArea:[{
+			Name:String,
+			Pincode:[
+
+			]
+		}],
 	WorkInfo:[{
 		Company:String,
 		Designation:String,
 		Role:String,
-		WorkLocation:String,		
+		Name:String,
+		Pincode:[
+
+			],
+		WorkArea:[{
+			Name:String,
+			Pincode:[{
+
+			}]
+		}],		
 		JoingDate:Date,
 		LeftDate:Date,
 		Remarks:String			

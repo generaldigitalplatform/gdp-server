@@ -17,7 +17,7 @@ exports.findJobById = function(req,res){
 	var query = {"JobId":req.params.Id};
 	
 	var jobObjId = new ObjectId((req.params.Id.length < 12) ? "123456789012" : req.params.Id);
-	var query = {$or:[{"_id":jobObjId},{"JobId":req.params.Id},{"PrimaryPhone":req.params.Id},{"SecondaryPhone":req.params.Id},{'ContactAddress.Pincode':req.params.Id},{'ContactAddress.City':req.params.Id},{'ContactAddress.Zone':req.params.Id},{'ContactAddress.State':req.params.Id},{'ContactAddress.Area':req.params.Id}]};	
+	var query = {$or:[{"_id":jobObjId},{"EmployeeId":req.params.Id},{"JobId":req.params.Id}]};	
 
 	jobModel.findOne(query,function(err,profile){
 		if (err) res.send(err);;
@@ -45,7 +45,7 @@ exports.updateJobById = function(req,res){
 	var options = {upsert:true,new: true};
 	
 	var jobObjId = new ObjectId((req.params.Id.length < 12) ? "123456789012" : req.params.Id);
-	var query = {$or:[{"_id":jobObjId},{"JobId":req.params.Id},{"PrimaryPhone":req.params.Id},{"SecondaryPhone":req.params.Id},{'ContactAddress.Pincode':req.params.Id},{'ContactAddress.City':req.params.Id},{'ContactAddress.Zone':req.params.Id},{'ContactAddress.State':req.params.Id},{'ContactAddress.Area':req.params.Id}]};	
+	var query = {$or:[{"_id":jobObjId},{"EmployeeId":req.params.Id},{"JobId":req.params.Id}]};	
 
 	jobModel.findOneAndUpdate(query,{$set:updateData},options,function(err,profile){
 		if (err) res.send(err);;
