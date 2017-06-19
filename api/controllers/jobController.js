@@ -1,6 +1,8 @@
 var mongoose = require('mongoose'),
-	jobModel = mongoose.model('Job');
-var ObjectId = require('mongoose').Types.ObjectId;
+	jobModel = mongoose.model('Job'),
+	customerProfileModel = mongoose.model('CustomerProfile'),
+	ObjectId = require('mongoose').Types.ObjectId;
+	var extend = require('util')._extend;
 
 exports.findAllJobs = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
@@ -12,6 +14,51 @@ exports.findAllJobs = function(req,res){
 		});
 	};
 exports.findJobById = function(req,res){
+	res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	var query = {"JobId":req.params.Id};
+	var CustomerDetailsJson = {CustomerDetails:[]};
+	var jobDetails;
+
+	var jobObjId = new ObjectId((req.params.Id.length < 12) ? "123456789012" : req.params.Id);
+	var query = {$or:[{"_id":jobObjId},{"EmployeeId":req.params.Id},{"JobId":req.params.Id}]};	
+
+	jobModel.findOne(query,function(err,profile){
+		if (err) res.send(err);;
+		if(profile)
+		{
+			jobDetails = JSON.stringify(profile);
+			var jobModel = JSON.parse(jobDetails);
+			customerProfileModel.findOne({"_id":jobModel.CustomerId},function(err,customerProfile){
+				var customerProfileStringify = JSON.stringify(customerProfile);
+				var customer = JSON.parse(customerProfileStringify);
+
+				CustomerDetailsJson.CustomerDetails = {
+					FirstName:customer.FirstName,
+					PrimaryPhone:customer.PrimaryPhone,	
+					ContactAddress:{
+						DoorNumber:customer.ContactAddress.DoorNumber,
+						BuildingNumber:customer.ContactAddress.BuildingNumber,
+						BuildingName:customer.ContactAddress.BuildingNumber,
+						Street:customer.ContactAddress.Street,
+						Area:customer.ContactAddress.Area,
+						City:customer.ContactAddress.City,
+						Taluk:customer.ContactAddress.Taluk,
+						District:customer.ContactAddress.District,
+						State:customer.ContactAddress.State,
+						Pincode:customer.ContactAddress.Pincode,
+						Landmark:customer.ContactAddress.Landmark
+					},
+				}
+						var customerProfile = extend(jobModel,CustomerDetailsJson);
+						res.json(customerProfile);
+			});
+
+	
+		}
+	});
+};
+exports.findCustomerAndJobById = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	var query = {"JobId":req.params.Id};
