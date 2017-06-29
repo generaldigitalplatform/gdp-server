@@ -3,8 +3,8 @@ var express 	= require('express'),
 	mongoose 	= require('mongoose'),
 	bodyParser  = require('body-parser'),
 	cors = require("cors"),
-	databaseUri = process.env.DATABASE_URI || process.env.MONGODB_URI || 'mongodb://192.168.2.66:27017/gdmp',
-	//databaseUri = 'mongodb://gdpserver:gdpserver@ds111882.mlab.com:11882/heroku_fw10lrf3?authMechanism=SCRAM-SHA-1',
+	//databaseUri = process.env.DATABASE_URI || process.env.MONGODB_URI || 'mongodb://192.168.2.66:27017/gdmp',
+	databaseUri = 'mongodb://gdp-server:gdp-server@ds131512.mlab.com:31512/gdp-server?authMechanism=SCRAM-SHA-1',
 	customerProfileModel = require('./api/models/customerProfileModel'),
 	productUsageModel = require('./api/models/ProductUsageModel'),
 	employeeProfileModel = require('./api/models/EmployeeProfileModel'),
@@ -25,6 +25,8 @@ app.use(bodyParser.json());
 var customerProfileroutes = require('./api/routes/customerProfileRoute');
 var	employeeProfileroutes= require('./api/routes/EmployeeProfileRoute');
 
+var routers = require('./api/routes');
+
 app.use('/employee',employeeProfileroutes);
 app.use('/customer',customerProfileroutes);
 
@@ -33,5 +35,5 @@ var httpServer = require('http').createServer(app);
 httpServer.listen(port, function() {
     console.log('gdmp-server running on port ' + port + '.');
 });
-
+routers(app);
 module.exports = app;
