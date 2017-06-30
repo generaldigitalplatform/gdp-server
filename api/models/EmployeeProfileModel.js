@@ -5,8 +5,7 @@ var EmployeeProfileSchema = new Schema({
 	FirstName:String,
 	LastName:String,
 	PrimaryPhone:String,
-	SecondaryPhone:String,
-	EmployeeId:String,
+	SecondaryPhone:String,	
 	ContactAddress:[{
 		DoorNumber:String,
 		BuildingNumber:String,
@@ -16,7 +15,6 @@ var EmployeeProfileSchema = new Schema({
 		City:String,
 		Taluk:String,
 		District:String,
-		Zone:String,
 		State:String,
 		Pincode:String,
 		Landmark:String
@@ -30,7 +28,6 @@ var EmployeeProfileSchema = new Schema({
 		City:String,
 		Taluk:String,
 		District:String,
-		Zone:String,
 		State:String,
 		Pincode:String,
 		Landmark:String
@@ -46,29 +43,22 @@ var EmployeeProfileSchema = new Schema({
 		College:String,
 		University:String,
 		Year:String			
-	}],	
-	WorkArea:[{
-			Name:String,
-			Pincode:[
-
-			]
-		}],
+	}],
 	WorkInfo:[{
+		EmployeeId:String,
 		Company:String,
-		Designation:String,
+		Department:String,
 		Role:String,
-		Name:String,
-		Pincode:[
-
-			],
-		WorkArea:[{
+		Manager:String,
+		MobileNumber:Number,
+		LandLine:Number,
+		WorkLocation:[{
 			Name:String,
-			Pincode:[{
-
-			}]
+			Area:[],
+			Pincode:[]
 		}],		
 		JoingDate:Date,
-		LeftDate:Date,
+		LastDate:Date,
 		Remarks:String			
 	}]
 },{"strict":false});

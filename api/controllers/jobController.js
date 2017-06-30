@@ -19,6 +19,7 @@ exports.findJobById = function(req,res){
 	var query = {"JobId":req.params.Id};
 	var CustomerDetailsJson = {CustomerDetails:[]};
 	var jobDetails;
+	var DoorNumber,BuildingNumber,BuildingName,Street,Area,City,Taluk,District,State,Pincode,Landmark;
 
 	var jobObjId = new ObjectId((req.params.Id.length < 12) ? "123456789012" : req.params.Id);
 	var query = {$or:[{"_id":jobObjId},{"EmployeeId":req.params.Id},{"JobId":req.params.Id}]};	
@@ -30,26 +31,54 @@ exports.findJobById = function(req,res){
 			jobDetails = JSON.stringify(profile);
 			var jobModel = JSON.parse(jobDetails);
 			customerProfileModel.findOne({"_id":jobModel.CustomerId},function(err,customerProfile){
-				var customerProfileStringify = JSON.stringify(customerProfile);
-				var customer = JSON.parse(customerProfileStringify);
-
+			var customerProfileStringify = JSON.stringify(customerProfile);
+			var customer = JSON.parse(customerProfileStringify);
+			if("FirstName" in customer) FirstName={"FirstName":customer.FirstName}
+			if("PrimaryPhone" in customer) PrimaryPhone={"PrimaryPhone":customer.PrimaryPhone}
+			if("ContactAddress" in customer) {
+		  	  if("DoorNumber" in customer.ContactAddress) DoorNumber={"DoorNumber":customer.ContactAddress.DoorNumber}
+		  	  if("BuildingNumber" in customer.ContactAddress) BuildingNumber={"BuildingNumber":customer.ContactAddress.BuildingNumber}
+		  	  if("BuildingName" in customer.ContactAddress) BuildingName={"BuildingName":customer.ContactAddress.BuildingName}
+		  	  if("Street" in customer.ContactAddress) Street={"Street":customer.ContactAddress.Street}
+		  	  if("Area" in customer.ContactAddress) Area={"Area":customer.ContactAddress.Area}
+		  	  if("City" in customer.ContactAddress) City={"City":customer.ContactAddress.City}
+		  	  if("Taluk" in customer.ContactAddress) Taluk={"Taluk":customer.ContactAddress.Taluk}
+		  	  if("District" in customer.ContactAddress) District={"District":customer.ContactAddress.District}
+		  	  if("State" in customer.ContactAddress) State={"State":customer.ContactAddress.State}
+		  	  if("Pincode" in customer.ContactAddress) Pincode={"Pincode":customer.ContactAddress.Pincode}
+		  	  if("Landmark" in customer.ContactAddress) Landmark={"Landmark":customer.ContactAddress.Landmark}
+			 }
+			if("PermanentAddress" in customer) {
+		  	  if("DoorNumber" in customer.ContactAddress) DoorNumber={"DoorNumber":customer.ContactAddress.DoorNumber}
+		  	  if("BuildingNumber" in customer.ContactAddress) BuildingNumber={"BuildingNumber":customer.ContactAddress.BuildingNumber}
+		  	  if("BuildingName" in customer.ContactAddress) BuildingName={"BuildingName":customer.ContactAddress.BuildingName}
+		  	  if("Street" in customer.ContactAddress) Street={"Street":customer.ContactAddress.Street}
+		  	  if("Area" in customer.ContactAddress) Area={"Area":customer.ContactAddress.Area}
+		  	  if("City" in customer.ContactAddress) City={"City":customer.ContactAddress.City}
+		  	  if("Taluk" in customer.ContactAddress) Taluk={"Taluk":customer.ContactAddress.Taluk}
+		  	  if("District" in customer.ContactAddress) District={"District":customer.ContactAddress.District}
+		  	  if("State" in customer.ContactAddress) State={"State":customer.ContactAddress.State}
+		  	  if("Pincode" in customer.ContactAddress) Pincode={"Pincode":customer.ContactAddress.Pincode}
+		  	  if("Landmark" in customer.ContactAddress) Landmark={"Landmark":customer.ContactAddress.Landmark}
+			 }
 				CustomerDetailsJson.CustomerDetails = {
-					FirstName:customer.FirstName,
-					PrimaryPhone:customer.PrimaryPhone,	
-					ContactAddress:{
-						DoorNumber:customer.ContactAddress.DoorNumber,
-						BuildingNumber:customer.ContactAddress.BuildingNumber,
-						BuildingName:customer.ContactAddress.BuildingNumber,
-						Street:customer.ContactAddress.Street,
-						Area:customer.ContactAddress.Area,
-						City:customer.ContactAddress.City,
-						Taluk:customer.ContactAddress.Taluk,
-						District:customer.ContactAddress.District,
-						State:customer.ContactAddress.State,
-						Pincode:customer.ContactAddress.Pincode,
-						Landmark:customer.ContactAddress.Landmark
+					FirstName,
+					PrimaryPhone,
+					ContactAddress:{		
+						DoorNumber,
+						BuildingNumber,
+						BuildingName,
+						Street,
+						Area,
+						City,
+						Taluk,
+						District,
+						State,
+						Pincode,
+						Landmark
 					},
 				}
+
 						var customerProfile = extend(jobModel,CustomerDetailsJson);
 						res.json(customerProfile);
 			});

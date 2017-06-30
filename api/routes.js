@@ -61,6 +61,7 @@ module.exports = function(app){
     employeeProfileRoutes.delete('/profile/:Id', employeeProfileController.deleteEmployeeProfileById);
     employeeProfileRoutes.delete('/profile', employeeProfileController.deleteAllEmployeeProfile);
 
+
     apiRoutes.use('/employee', jobRoutes);
  
 

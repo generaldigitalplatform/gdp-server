@@ -17,8 +17,26 @@ exports.findEmployeeProfileById = function(req,res){
 	var employeeObjId = new ObjectId((req.params.Id.length < 12) ? "123456789012" : req.params.Id);
 	//var query = {$or:[{"_id":employeeObjId},{"EmployeeId":req.params.Id},{"PrimaryPhone":req.params.Id},{"SecondaryPhone":req.params.Id},{"WorkInfo.WorkArea.Pincode":[]}]};
    
-	var query = {"WorkArea.Pincode":{"$in":["643004"]}};
+	var query = {"WorkInfo.WorkLocation.Pincode":{"$in":["1"]}};
 	//PersonModel.find({ favouriteFoods: { "$in" : ["sushi"]} }, ...);
+
+	//var query = {"WorkInfo.Pincode":{"$in":["643001"]}};
+	employeeProfileModel.find(query,function(err,profile){
+		if (err) res.send(err);
+		if(profile)
+		{
+			res.json(profile);
+		}
+	});
+
+};
+exports.findEmployeeProfileById = function(req,res){
+	res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	var employeeObjId = new ObjectId((req.params.Id.length < 12) ? "123456789012" : req.params.Id);
+	var query = {$or:[{"_id":employeeObjId},{"WorkInfo.EmployeeId":req.params.Id},{"WorkInfo.WorkLocation.Name":req.params.Id},{"PrimaryPhone":req.params.Id},
+	{"SecondaryPhone":req.params.Id},{"WorkInfo.WorkLocation.Area":{"$in":[req.params.Id]}},
+	{"WorkInfo.WorkLocation.Pincode":{"$in":[req.params.Id]}}]}
 
 	//var query = {"WorkInfo.Pincode":{"$in":["643001"]}};
 	employeeProfileModel.find(query,function(err,profile){
