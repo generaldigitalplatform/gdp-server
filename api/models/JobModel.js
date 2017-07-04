@@ -3,16 +3,20 @@ var Schema = mongoose.Schema;
 var SchemaTypes = mongoose.Schema.Types;
 
 
-var JobSchema = new Schema({
-	JobId:Object,
+var JobSchema = new Schema({	
 	CustomerId:Object,
 	EmployeeId:Object,
 	EmployeeName:String,
-	JobTitle:String,
-	JobDescription:String,
-	JobDateTime:Date,
-	JobLocation:String,
-	JobStatus:String,
+	JobDetails:{
+		JobId:Object,
+		JobTitle:String,
+		JobDescription:String,
+		JobDateTime:Date,
+		JobLocation:String,
+		JobStatus:String,
+		JobCreatedTime:Date,
+		JobCreatedBy:String
+	},	
 	Feedback:String,
 	StartedJob: [{
     type: {

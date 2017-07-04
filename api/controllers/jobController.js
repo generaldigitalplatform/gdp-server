@@ -22,7 +22,7 @@ exports.findJobById = function(req,res){
 	var DoorNumber,BuildingNumber,BuildingName,Street,Area,City,Taluk,District,State,Pincode,Landmark;
 
 	var jobObjId = new ObjectId((req.params.Id.length < 12) ? "123456789012" : req.params.Id);
-	var query = {$or:[{"_id":jobObjId},{"EmployeeId":req.params.Id},{"JobId":req.params.Id}]};	
+	var query = {$or:[{"_id":jobObjId},{"EmployeeId":req.params.Id},{"JobDetails.JobId":req.params.Id}]};	
 
 	jobModel.findOne(query,function(err,profile){
 		if (err) res.send(err);;
