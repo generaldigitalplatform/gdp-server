@@ -39,7 +39,15 @@ var CustomerProfileSchema = new Schema({
 		WhatsApp:String,
 		Facebook:String,
 		Twitter:String		
-	},		
+	},
+	AddressProof:{
+		DrivingLicence:String,
+		RationCard:String,
+		Passport:String,
+		BankPassbook:String,
+		AadharId:String,
+		VoterId:String	
+	},
 	Occupation:String
 },{	"strict":false});
 

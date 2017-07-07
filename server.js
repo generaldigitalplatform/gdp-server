@@ -3,7 +3,7 @@ var express 	= require('express'),
 	mongoose 	= require('mongoose'),
 	bodyParser  = require('body-parser'),
 	cors = require("cors"),
-	databaseUri = process.env.DATABASE_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/gdp',
+	databaseUri = process.env.DATABASE_URI || process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/gdp',
 	//databaseUri = 'mongodb://gdp-server:gdp-server@ds131512.mlab.com:31512/gdp-server?authMechanism=SCRAM-SHA-1',
 	customerProfileModel = require('./api/models/customerProfileModel'),
 	productUsageModel = require('./api/models/ProductUsageModel'),
@@ -11,6 +11,7 @@ var express 	= require('express'),
 	jobModel = require('./api/models/JobModel');
 	employeeLocationModel = require('./api/models/EmployeeLocationModel');
 	customerFeedbackModel = require('./api/models/CustomerFeedbackModel');
+	fieldForceModel = require('./api/models/fieldforceModel');
 
 app.options('*', cors()); 
 
@@ -24,6 +25,7 @@ app.use(bodyParser.json());
 
 var customerProfileroutes = require('./api/routes/customerProfileRoute');
 var	employeeProfileroutes= require('./api/routes/EmployeeProfileRoute');
+var fieldForceRoutes = require('./api/routes/fieldforceRoutes');
 
 var routers = require('./api/routes');
 
@@ -35,5 +37,8 @@ var httpServer = require('http').createServer(app);
 httpServer.listen(port, function() {
     console.log('gdmp-server running on port ' + port + '.');
 });
+
+fieldForceRoutes(app);
+
 routers(app);
 module.exports = app;

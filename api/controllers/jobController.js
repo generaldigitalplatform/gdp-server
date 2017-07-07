@@ -33,20 +33,21 @@ exports.findJobById = function(req,res){
 			customerProfileModel.findOne({"_id":jobModel.CustomerId},function(err,customerProfile){
 			var customerProfileStringify = JSON.stringify(customerProfile);
 			var customer = JSON.parse(customerProfileStringify);
+			var doorNo,buildingNumber,buildingName,street,area,city,taluk,district,zone,state,pincode,landmark;
 			if("FirstName" in customer) FirstName={"FirstName":customer.FirstName}
 			if("PrimaryPhone" in customer) PrimaryPhone={"PrimaryPhone":customer.PrimaryPhone}
 			if("ContactAddress" in customer) {
-		  	  if("DoorNumber" in customer.ContactAddress) DoorNumber={"DoorNumber":customer.ContactAddress.DoorNumber}
-		  	  if("BuildingNumber" in customer.ContactAddress) BuildingNumber={"BuildingNumber":customer.ContactAddress.BuildingNumber}
-		  	  if("BuildingName" in customer.ContactAddress) BuildingName={"BuildingName":customer.ContactAddress.BuildingName}
-		  	  if("Street" in customer.ContactAddress) Street={"Street":customer.ContactAddress.Street}
-		  	  if("Area" in customer.ContactAddress) Area={"Area":customer.ContactAddress.Area}
-		  	  if("City" in customer.ContactAddress) City={"City":customer.ContactAddress.City}
-		  	  if("Taluk" in customer.ContactAddress) Taluk={"Taluk":customer.ContactAddress.Taluk}
-		  	  if("District" in customer.ContactAddress) District={"District":customer.ContactAddress.District}
-		  	  if("State" in customer.ContactAddress) State={"State":customer.ContactAddress.State}
-		  	  if("Pincode" in customer.ContactAddress) Pincode={"Pincode":customer.ContactAddress.Pincode}
-		  	  if("Landmark" in customer.ContactAddress) Landmark={"Landmark":customer.ContactAddress.Landmark}
+		  	  if("DoorNumber" in customer.ContactAddress) doorNo={"DoorNumber":customer.ContactAddress.DoorNumber}
+		  	  if("BuildingNumber" in customer.ContactAddress) buildingNumber={"BuildingNumber":customer.ContactAddress.BuildingNumber}
+		  	  if("BuildingName" in customer.ContactAddress) buildingName={"BuildingName":customer.ContactAddress.BuildingName}
+		  	  if("Street" in customer.ContactAddress) street={"Street":customer.ContactAddress.Street}
+		  	  if("Area" in customer.ContactAddress) area={"Area":customer.ContactAddress.Area}
+		  	  if("City" in customer.ContactAddress) city={"City":customer.ContactAddress.City}
+		  	  if("Taluk" in customer.ContactAddress) taluk={"Taluk":customer.ContactAddress.Taluk}
+		  	  if("District" in customer.ContactAddress) district={"District":customer.ContactAddress.District}
+		  	  if("State" in customer.ContactAddress) state={"State":customer.ContactAddress.State}
+		  	  if("Pincode" in customer.ContactAddress) pincode={"Pincode":customer.ContactAddress.Pincode}
+		  	  if("Landmark" in customer.ContactAddress) landmark={"Landmark":customer.ContactAddress.Landmark}
 			 }
 			if("PermanentAddress" in customer) {
 		  	  if("DoorNumber" in customer.ContactAddress) DoorNumber={"DoorNumber":customer.ContactAddress.DoorNumber}
@@ -61,29 +62,27 @@ exports.findJobById = function(req,res){
 		  	  if("Pincode" in customer.ContactAddress) Pincode={"Pincode":customer.ContactAddress.Pincode}
 		  	  if("Landmark" in customer.ContactAddress) Landmark={"Landmark":customer.ContactAddress.Landmark}
 			 }
-				CustomerDetailsJson.CustomerDetails = {
-					FirstName,
-					PrimaryPhone,
-					ContactAddress:{		
-						DoorNumber,
-						BuildingNumber,
-						BuildingName,
-						Street,
-						Area,
-						City,
-						Taluk,
-						District,
-						State,
-						Pincode,
-						Landmark
-					},
-				}
-
-						var customerProfile = extend(jobModel,CustomerDetailsJson);
-						res.json(customerProfile);
+				// CustomerDetailsJson.CustomerDetails = {
+				// 	FirstName,
+				// 	PrimaryPhone,
+				// 	ContactAddress:{		
+				// 		doorNo,
+				// 		buildingNumber,
+				// 		buildingName,
+				// 		street,
+				// 		area,
+				// 		city,
+				// 		taluk,
+				// 		district,
+				// 		state,
+				// 		pincode,
+				// 		landmark
+				// 	},
+				// }
+				CustomerDetailsJson.CustomerDetails = $.extend(doorNo,buildingNumber,buildingName,street,area,city,taluk,district,state,pincode,landmark);
+				var customerProfile = $.extend(jobModel,CustomerDetailsJson);
+				res.json(customerProfile);
 			});
-
-	
 		}
 	});
 };
