@@ -11,9 +11,6 @@ function generateToken(user){
 function setUserInfo(request){
     return {
         _id: request._id,
-        firstname:request.firstname,
-        lastname:request.lastname,
-        employeeId:request.employeeId,
         email: request.email,
         role: request.role
     };
@@ -32,9 +29,6 @@ exports.login = function(req, res, next){
  
 exports.register = function(req, res, next){
  
-    var firstname = req.body.firstname;
-    var lastname = req.body.lastname;
-    var employeeId = req.body.employeeId;
     var email = req.body.email;
     var password = req.body.password;
     var role = req.body.role;
@@ -58,9 +52,6 @@ exports.register = function(req, res, next){
         }
  
         var user = new User({
-            firstname:firstname,
-            lastname:lastname,
-            employeeId:employeeId,
             email: email,
             password: password,
             role: role

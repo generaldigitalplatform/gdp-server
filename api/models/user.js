@@ -2,12 +2,7 @@ var mongoose = require('mongoose');
 var bcrypt   = require('bcrypt-nodejs');
  
 var UserSchema = new mongoose.Schema({
-    name:{
-        type: String
-    },
-    employeeId:{
-        type: String
-    },
+ 
     email: {
         type: String
         // lowercase: true,
@@ -19,9 +14,9 @@ var UserSchema = new mongoose.Schema({
         required: true
     },
     role: {
-        type: String,
-        enum: ['employee', 'admin', 'manager'],
-        default: 'employee'
+        type: String
+        // enum: ['reader', 'creator', 'editor'],
+        // default: 'reader'
     }
  
 }, {
