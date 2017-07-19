@@ -3,6 +3,7 @@ var Schema = mongoose.Schema;
 
 var CustomerFeedbackSchema = new Schema({
 	CustomerId:Object,
+	CollectedBy:String,
 	Industry:[{
 		Name:String,
 		Company:[{
@@ -30,8 +31,6 @@ var CustomerFeedbackSchema = new Schema({
 			}],
 		}],	
 	}],
-
-	
 },{	"strict":false});
 
 module.exports = mongoose.model('CustomerFeedback',CustomerFeedbackSchema);

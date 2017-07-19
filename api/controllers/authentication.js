@@ -11,6 +11,9 @@ function generateToken(user){
 function setUserInfo(request){
     return {
         _id: request._id,
+        employeeid:request.employeeid,
+        firstname:request.firstname,
+        lastname:request.lastname,
         email: request.email,
         role: request.role
     };
@@ -29,10 +32,17 @@ exports.login = function(req, res, next){
  
 exports.register = function(req, res, next){
  
+    var employeeid=req.body.employeeid;
+    var firstname=req.body.firstname;
+    var lastname=req.body.lastname;    
     var email = req.body.email;
     var password = req.body.password;
     var role = req.body.role;
  
+    if(!firstname){
+        return res.status(422).send({error: 'You must enter firstname'});
+    }
+
     if(!email){
         return res.status(422).send({error: 'You must enter an email address'});
     }
@@ -52,6 +62,9 @@ exports.register = function(req, res, next){
         }
  
         var user = new User({
+            employeeid: employeeid,
+            firstname: firstname,
+            lastname: lastname,
             email: email,
             password: password,
             role: role
