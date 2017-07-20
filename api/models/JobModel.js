@@ -64,6 +64,9 @@ var JobSchema = new Schema({
 	    Area:String,
 	    DateTime:Date	
 	}
+},
+{
+    timestamps: true
 },{"strict":false});
 JobSchema.index({ 'StartedLocation': '2dsphere','ReachedLocation': '2dsphere','CancelledLocation': '2dsphere' });
 module.exports = mongoose.model('Job',JobSchema);

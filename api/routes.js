@@ -72,6 +72,8 @@ module.exports = function(app){
     jobRoutes.delete('/job/:Id',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.deleteJobById);
     jobRoutes.delete('/job',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.deleteAllJobs);
 
+    jobRoutes.post('/jobstatus',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.findJobStatusById);
+
     apiRoutes.use('/employee', locationRoutes);
 
     locationRoutes.get('/location',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), employeeLocationController.findAllEmployeeLocation);

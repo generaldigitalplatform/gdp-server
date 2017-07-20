@@ -36,19 +36,61 @@ exports.findJobById = function(req,res){
 		}
 	});
 };
-exports.findCustomerAndJobById = function(req,res){
+exports.findJobStatusById = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	var jobObjId = new ObjectId((req.params.Id.length < 12) ? "123456789012" : req.params.Id);
-	var query = {$or:[{"_id":jobObjId},{"EmployeeDetails.EmployeeId":req.params.Id},{"JobId":req.params.Id}]};	
+	//var jobObjId = new ObjectId((req.params.Id.length < 12) ? "123456789012" : req.params.Id);
+	
+	var totalJobsCount;
+	var closedJobsCount;
+	var rescheduledJobsCount;
+	var pendingJobsCount;
+	var allocatedJobsCount;
+	var lteQuery;
+	var gteQuery;
+	//var todayQuery = {"createdAt" : new ISODate(req.Today)};
+	gteQuery = new Date(req.body.fromDate).toISOString();
+	if(req.body.fromDate == req.body.toDate){
+		lteQuery = new Date(req.body.toDate).toISOString();
+	}
+	else{
+		lteQuery = new Date(req.body.toDate).toISOString();
+	}
 
-	jobModel.findOne(query,function(err,profile){
-		if (err) return res.send(err);
-		if(profile)
-		{
-			res.json(profile);
+	jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":"Closed","createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+	if (err) return res.send(err);
+		if(count){
+		closedJobsCount = count;
 		}
-	});
+		jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":"Pending","createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+			if (err) return res.send(err);
+			if(count)
+			{
+				pendingJobsCount = count;
+			}
+
+			jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":"Rescheduled","createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+				if (err) return res.send(err);
+				if(count)
+				{
+					rescheduledJobsCount = count;
+				}
+				jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+					if (err) return res.send(err);
+					if(count)
+					{
+						totalJobsCount = count;
+					}
+				res.send({
+						"totalJobs":totalJobsCount,
+						"closedJobs":closedJobsCount,
+						"pendingJobs":pendingJobsCount,
+						"rescheduledJobs":rescheduledJobsCount
+					});
+				});
+			});
+		});
+	});	
 };
 exports.createNewJob = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
@@ -108,7 +150,7 @@ exports.deleteJobById = function(req,res){
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	
 	var jobObjId = new ObjectId((req.params.Id.length < 12) ? "123456789012" : req.params.Id);
-	var query = {$or:[{"_id":jobObjId},{"JobId":req.params.Id},{"PrimaryPhone":req.params.Id},{"SecondaryPhone":req.params.Id},{'ContactAddress.Pincode':req.params.Id},{'ContactAddress.City':req.params.Id},{'ContactAddress.Zone':req.params.Id},{'ContactAddress.State':req.params.Id},{'ContactAddress.Area':req.params.Id}]};	
+	var query = {$or:[{"_id":jobObjId},{"EmployeeDetails.EmployeeId":req.params.Id},{"JobId":req.params.Id},{"PrimaryPhone":req.params.Id},{"SecondaryPhone":req.params.Id},{'ContactAddress.Pincode':req.params.Id},{'ContactAddress.City':req.params.Id},{'ContactAddress.Zone':req.params.Id},{'ContactAddress.State':req.params.Id},{'ContactAddress.Area':req.params.Id}]};	
 
 		jobModel.findOneAndRemove(
 		query,function(err,profile){
