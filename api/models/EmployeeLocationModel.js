@@ -18,6 +18,8 @@ var EmployeeLocationSchema = new Schema({
     TrackDateTime:Date
     }
 }]
+},{
+    timestamps: true
 },{"strict":false});
 
 EmployeeLocationSchema.index({ 'CurrentLocation': '2dsphere' });

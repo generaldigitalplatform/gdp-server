@@ -61,6 +61,8 @@ var EmployeeProfileSchema = new Schema({
 		LastDate:Date,
 		Remarks:String			
 	}]
+},{
+    timestamps: true
 },{"strict":false});
 
 module.exports = mongoose.model('EmployeeProfile',EmployeeProfileSchema);

@@ -36,6 +36,46 @@ exports.findJobById = function(req,res){
 		}
 	});
 };
+exports.searchJobById = function(req,res){
+	res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+var query =[	
+	{$match:{
+		$and:[
+	 // {"CustomerDetails.Location":req.body.location},
+	 // {"CustomerDetails.FirstName":req.body.firstname},
+	 // {"CustomerDetails.PrimaryPhone":Number(req.body.primaryphone)},
+	 // {"JobId":Number(req.body.jobid)},
+	 // {"JobScheduledTime":req.body.scheduledtime}
+	]}}];
+
+if(req.body.employeeid){
+	query[0].$match.$and.push({"EmployeeDetails.EmployeeId":req.body.employeeid});
+}
+if(req.body.location){
+	query[0].$match.$and.push({"CustomerDetails.Location":req.body.location});
+}
+if(req.body.firstname){
+	query[0].$match.$and.push({"CustomerDetails.FirstName":req.body.firstname});
+}
+if(req.body.primaryphone){
+	query[0].$match.$and.push({"CustomerDetails.PrimaryPhone":Number(req.body.primaryphone)});
+}
+if(req.body.jobid){
+	query[0].$match.$and.push({"JobId":Number(req.body.jobid)});
+}
+// if(req.body.scheduledtime){
+// 	query[0].$match.$and.push({"JobScheduledTime":new Date(req.body.scheduledtime).toISOString()});
+// }
+
+	jobModel.aggregate(query, function(err,profile){
+		if (err) return res.send(err);
+		if(profile)
+		{			
+			res.json(profile);
+		}
+	});
+};
 exports.findJobStatusById = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");

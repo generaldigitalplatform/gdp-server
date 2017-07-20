@@ -3,6 +3,7 @@ var express 	= require('express'),
 	mongoose 	= require('mongoose'),
 	bodyParser  = require('body-parser'),
 	cors = require("cors"),
+	compression = require('compression'),
 	//databaseUri = process.env.DATABASE_URI || process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/gdp',
 	databaseUri = 'mongodb://gdp-server:gdp-server@ds131512.mlab.com:31512/gdp-server?authMechanism=SCRAM-SHA-1',
 	customerProfileModel = require('./api/models/customerProfileModel'),
@@ -22,6 +23,7 @@ mongoose.connect(databaseUri,connectionOptions);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+//app.use(compression());
 
 var customerProfileroutes = require('./api/routes/customerProfileRoute');
 var	employeeProfileroutes= require('./api/routes/EmployeeProfileRoute');

@@ -32,6 +32,8 @@ var FieldForceSchema = new mongoose.Schema({
     workpincodes:[{
         type: Number   
     }],   
+},{
+    timestamps: true
 }, {strict:false});
   
 module.exports = mongoose.model('FieldForce', FieldForceSchema);

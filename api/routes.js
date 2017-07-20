@@ -74,6 +74,8 @@ module.exports = function(app){
 
     jobRoutes.post('/jobstatus',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.findJobStatusById);
 
+    jobRoutes.post('/searchjob',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.searchJobById);
+
     apiRoutes.use('/employee', locationRoutes);
 
     locationRoutes.get('/location',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), employeeLocationController.findAllEmployeeLocation);
