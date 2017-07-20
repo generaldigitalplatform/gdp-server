@@ -19,7 +19,8 @@ module.exports = function(app){
         customerProfileFeedbackRoutes = express.Router();
         employeeProfileRoutes = express.Router(),
         jobRoutes = express.Router();
-        locationRoutes = express.Router();
+        locationRoutes = express.Router(),
+        reportsRoutes = express.Router();
     // Auth Routes
     apiRoutes.use('/auth', authRoutes);
  
@@ -41,6 +42,8 @@ module.exports = function(app){
     customerProfileRoutes.delete('/profile/:Id', customerProfileController.deleteCustomerProfileById);
     customerProfileRoutes.put('/profile/:Id',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']),customerProfileController.updateCustomerProfileById);
 
+    customerProfileRoutes.post('/profile/count',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), customerProfileController.findTotalCallById);
+
     apiRoutes.use('/customer', customerProfileFeedbackRoutes);
  
 
@@ -50,6 +53,7 @@ module.exports = function(app){
     customerProfileFeedbackRoutes.delete('/feedback',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), customerFeedbackController.deleteAllCustomerFeedback);
     customerProfileFeedbackRoutes.put('/feedback/:Id',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']),customerFeedbackController.updateCustomerFeedbackById);
 
+    customerProfileFeedbackRoutes.post('/feedback/count',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), customerFeedbackController.findProductFeedbackDetailsCountById);
 
     apiRoutes.use('/employee', employeeProfileRoutes);
  
@@ -75,6 +79,9 @@ module.exports = function(app){
     jobRoutes.post('/jobstatus',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.findJobStatusById);
 
     jobRoutes.post('/searchjob',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.searchJobById);
+
+    apiRoutes.use('/employee/telesales',reportsRoutes);
+    reportsRoutes.get('/reports',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.searchJobById);
 
     apiRoutes.use('/employee', locationRoutes);
 

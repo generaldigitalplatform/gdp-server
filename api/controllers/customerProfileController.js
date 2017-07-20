@@ -36,6 +36,31 @@ exports.findCustomerProfileById = function(req,res){
 		}
 	}).maxTime(1).exec();
 };
+exports.findTotalCallById = function(req,res){
+	res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	//var jobObjId = new ObjectId((req.params.Id.length < 12) ? "123456789012" : req.params.Id);
+		
+	var lteQuery;
+	var gteQuery;
+
+	gteQuery = new Date(req.body.fromDate).toISOString();
+	if(req.body.fromDate == req.body.toDate){
+		lteQuery = new Date(req.body.toDate).toISOString();
+	}
+	else{
+		lteQuery = new Date(req.body.toDate).toISOString();
+	}
+
+	customerProfileModel.count(({"CreatedBy":req.body.createdby,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+	if (err) return res.send(err);
+	if(count){		
+		res.send({
+				"totalCalls":count	
+			});
+		};
+	});
+};
 exports.updateCustomerProfileById = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");

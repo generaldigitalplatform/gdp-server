@@ -8,7 +8,7 @@ var CustomerFeedbackSchema = new Schema({
 		Name:String,
 		Company:[{
 		Name:String,
-			Products:[{
+			Product:[{
 				Name:String,
 				ProductFeedback:[{
 					ProductsUsageDetails:[{

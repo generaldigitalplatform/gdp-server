@@ -25,6 +25,65 @@ exports.findAllCustomerFeedback = function(req,res){
 			}
 		});
 	};
+exports.findProductFeedbackDetailsCountById = function(req,res){
+	res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	//var jobObjId = new ObjectId((req.params.Id.length < 12) ? "123456789012" : req.params.Id);
+		
+	var lteQuery;
+	var gteQuery;
+
+	gteQuery = new Date(req.body.fromDate).toISOString();
+	if(req.body.fromDate == req.body.toDate){
+		lteQuery = new Date(req.body.toDate).toISOString();
+	}
+	else{
+		lteQuery = new Date(req.body.toDate).toISOString();
+	}
+
+customerFeedbackModel.find({},function(err,feedback){
+			if(err)	res.send(err);
+			if(feedback)
+			{
+				//res.json(feedback);
+			}
+		});
+
+	customerFeedbackModel.count(({"CollectedBy":req.body.collectedby,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+	if (err) return res.send(err);
+	if(count){
+			totalFeedback=count
+		}
+
+		customerFeedbackModel.count(({ $where: "this.Industry[0].Company[0].Product[0].ProductFeedback[0].length >= 1"}),function(err,count){
+		if (err) return res.send(err);
+		if(count){
+			ProductInterested=count
+		}
+		});
+		// if(customerFeedbackModel.Industry[0].Company[0].Product[0].ProductFeedback[0].ProductsInterestedDetails.length>1){
+		// customerFeedbackModel.count(({"Industry.Company.Product.ProductFeedback.ProductsInterestedDetails":req.body.employeeid,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+		// 		if (err) return res.send(err);
+		// 		if(count){
+		// 			res.send({
+		// 			"ProductInterested" :count
+		// 			});
+		// 		}
+		// 	});
+		// };
+		// if(customerFeedbackModel.Industry.Company.Product.ProductFeedback.ProductsNotInterestedDetails.length>1){
+		// customerFeedbackModel.count(({"Industry.Company.Product.ProductFeedback.ProductsNotInterestedDetails":req.body.employeeid,"JobStatus":"Rescheduled","createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+		// 		if (err) return res.send(err);
+		// 		if(count){
+		// 			res.send({
+		// 			"ProductNotInterested":count
+		// 			});
+		// 		}
+		// 	});
+		// };					
+
+	});
+};
 exports.findCustomerFeedbackById = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");

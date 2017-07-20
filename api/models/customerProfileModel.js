@@ -48,9 +48,10 @@ var CustomerProfileSchema = new Schema({
 		AadharId:String,
 		VoterId:String	
 	},
-	Occupation:String
+	Occupation:String,
+	CreatedBy:String
 },{
     timestamps: true
-},{	"strict":false});
+},{"strict":false});
 
 module.exports = mongoose.model('CustomerProfile',CustomerProfileSchema);
