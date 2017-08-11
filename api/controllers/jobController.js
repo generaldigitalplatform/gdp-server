@@ -98,29 +98,20 @@ exports.findJobStatusById = function(req,res){
 	}
 
 	jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":"Closed","createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
-	if (err) return res.send(err);
-		if(count){
-		closedJobsCount = count;
-		}
+	if (err) return res.send(err);	
+	closedJobsCount = count;
+
 		jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":"Pending","createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
-			if (err) return res.send(err);
-			if(count)
-			{
-				pendingJobsCount = count;
-			}
+			if (err) return res.send(err);			
+			pendingJobsCount = count;			
 
 			jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":"Rescheduled","createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
-				if (err) return res.send(err);
-				if(count)
-				{
-					rescheduledJobsCount = count;
-				}
+				if (err) return res.send(err);			
+				rescheduledJobsCount = count;
+			
 				jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
-					if (err) return res.send(err);
-					if(count)
-					{
-						totalJobsCount = count;
-					}
+					if (err) return res.send(err);				
+					totalJobsCount = count;				
 				res.send({
 						"totalJobs":totalJobsCount,
 						"closedJobs":closedJobsCount,

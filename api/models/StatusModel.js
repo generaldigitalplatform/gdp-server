@@ -1,8 +1,12 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var StatusSchema = new Schema({
-	Title:String	
+var FeedbackSchema = new Schema({
+	Rating:Number,
+	Feedback:String,
+	TaskId:Number,
+	CustomerId:Object,
+	EmployeeId:Object	
 },{"strict":false});
 
-module.exports = mongoose.model('Status',StatusSchema);
+module.exports = mongoose.model('Feedback',FeedbackSchema);
