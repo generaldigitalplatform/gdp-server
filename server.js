@@ -4,8 +4,8 @@ var express 	= require('express'),
 	bodyParser  = require('body-parser'),
 	cors = require("cors"),
 	compression = require('compression'),
-	databaseUri = process.env.DATABASE_URI || process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/gdp',
-	//databaseUri = 'mongodb://gdp-server:gdp-server@ds131512.mlab.com:31512/gdp-server?authMechanism=SCRAM-SHA-1',
+	//databaseUri = process.env.DATABASE_URI || process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/gdp',
+	databaseUri = 'mongodb://gdp-server:gdp-server@ds131512.mlab.com:31512/gdp-server?authMechanism=SCRAM-SHA-1',
 	customerProfileModel = require('./api/models/customerProfileModel'),
 	productUsageModel = require('./api/models/ProductUsageModel'),
 	employeeProfileModel = require('./api/models/EmployeeProfileModel'),
@@ -42,8 +42,8 @@ app.use('/customer',customerProfileroutes);
 
 var port = 3000;
 var httpServer = require('http').createServer(app);
-//httpServer.listen(process.env.PORT,process.env.IP, function() {
-httpServer.listen(port, function() {
+httpServer.listen(process.env.PORT,process.env.IP, function() {
+//httpServer.listen(port, function() {
     console.log('gdmp-server running on port ' + port + '.');
 });
 
