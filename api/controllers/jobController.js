@@ -138,7 +138,7 @@ exports.updateJobById = function(req,res){
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
 	var updateData = req.body;
-	var options = {upsert:true,new: true};
+	var options ='';// {upsert:true,new: true};
 	var jobObjId;
 	var query;
 	if(req.params.Id.length > 12){
@@ -146,10 +146,10 @@ exports.updateJobById = function(req,res){
 		query = {"_id":jobObjId};
 	}
 	else{
-		query = {"JobId":req.params.Id};
+		query = {"JobId":Number(req.params.Id)};
 	}
 	jobModel.findOneAndUpdate(query,{$set:updateData},options,function(err,profile){
-		if (err) return res.send(err);
+		if (err) return res.send(err);;
 		if(profile)
 		{
 			res.json(profile);
@@ -157,6 +157,32 @@ exports.updateJobById = function(req,res){
 	});
 };
 
+exports.editJobById = function(req,res){
+	res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
+	var updateData = req.body;
+	var options ='';// {upsert:true,new: true};
+	var jobObjId;
+	var query;
+	if(req.params.Id.length > 12){
+		jobObjId = new ObjectId(req.params.Id);
+		query = {"_id":jobObjId};
+	}
+	else{
+		query = {"JobId":Number(req.params.Id)};
+	}
+	jobModel.findOneAndUpdate(query,{$set:{"JobTitle":updateData.JobTitle,"JobDescription":updateData.JobDescription,"JobScheduledTime":updateData.JobScheduledTime,
+	"JobStatus":updateData.JobStatus,"JobLocation":updateData.JobLocation,"CustomerDetails.FirstName":updateData.CustomerDetails.FirstName,
+"CustomerDetails.Address":updateData.CustomerDetails.Address,"CustomerDetails.PrimaryPhone":updateData.CustomerDetails.PrimaryPhone
+,"EmployeeDetails.EmployeeId":updateData.EmployeeDetails.EmployeeId,"EmployeeDetails.FirstName":updateData.EmployeeDetails.FirstName}},options,function(err,profile){
+		if (err) return res.send(err);
+		if(profile)
+		{
+			res.json(profile);
+		}
+	});
+};
 // 	Model.findOneAndUpdate({ "_id": bookId }, { "$set": { "name": name, "genre": genre, "author": author, "similar": similar}}).exec(function(err, book){
 //    if(err) {
 //        console.log(err);
