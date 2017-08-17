@@ -138,7 +138,7 @@ exports.updateJobById = function(req,res){
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
 	var updateData = req.body;
-	var options ='';// {upsert:true,new: true};
+	var options ={upsert:true,new: true};
 	var jobObjId;
 	var query;
 	if(req.params.Id.length > 12){
