@@ -97,15 +97,20 @@ exports.findJobStatusById = function(req,res){
 		lteQuery = new Date(req.body.toDate).toISOString();
 	}
 
-	jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":"Completed","createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+	// "JobStatus":6 // completed
+	// "JobStatus":3 // pending   
+ //    "JobStatus":4 // rescheduled
+   
+   
+	jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":6,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
 	if (err) return res.send(err);	
 	completedJobsCount = count;
 
-		jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":"Pending","createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+		jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":3,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
 			if (err) return res.send(err);			
 			pendingJobsCount = count;			
 
-			jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":"Rescheduled","createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+			jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":4,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
 				if (err) return res.send(err);			
 				rescheduledJobsCount = count;
 			

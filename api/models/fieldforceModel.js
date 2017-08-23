@@ -26,12 +26,8 @@ var FieldForceSchema = new mongoose.Schema({
         unique: true,
         required: true
     },
-    worklocations:[{
-        type: String   
-    }],
-    workpincodes:[{
-        type: Number   
-    }],   
+    worklocations:[],
+    workpincodes:[],   
 },{
     timestamps: true
 }, {strict:false});

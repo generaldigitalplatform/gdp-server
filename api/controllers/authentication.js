@@ -39,28 +39,51 @@ exports.register = function(req, res, next){
     var password = req.body.password;
     var role = req.body.role;
  
+    if(!employeeid){
+        return res.status(422).send({error: 'You must enter EmployeeID'});
+    }
+
     if(!firstname){
-        return res.status(422).send({error: 'You must enter firstname'});
+        return res.status(422).send({error: 'You must enter Name'});
     }
 
     if(!email){
-        return res.status(422).send({error: 'You must enter an email address'});
+        return res.status(422).send({error: 'You must enter an Email Address'});
     }
  
     if(!password){
-        return res.status(422).send({error: 'You must enter a password'});
+        return res.status(422).send({error: 'You must enter a Password'});
     }
  
-    User.findOne({email: email}, function(err, existingUser){
- 
-        if(err){
-            return next(err);
+    //  var query =[   
+    //     {$match:{
+    //         $and:[
+    //     ]}}];
+
+    // if(email){
+    //     query[0].$match.$and.push({email:email});
+    // }
+    // if(employeeid){
+    //     query[0].$match.$and.push({employeeid:employeeid});
+    // }
+   
+    // User.aggregate(query, function(err,profile){
+    //     if (err) return res.send(err);
+    //     if(profile)
+    //     {           
+    //         res.json(profile);
+    //     }
+    // });
+    query = {$or:[{"email": email},{"employeeid":employeeid}]};
+
+   // User.findOne({email: email,employeeid:employeeid}, function(err, existingUser){
+        User.find(query, function(err,existingUser){
+        if(existingUser.length>0){
+            return res.status(422).send({error: 'Existing User : EmployeeID/EmailID is already in use'});
         }
- 
-        if(existingUser){
-            return res.status(422).send({error: 'That email address is already in use'});
-        }
- 
+        if(err){            
+            return next(err);            
+        }        
         var user = new User({
             employeeid: employeeid,
             firstname: firstname,
