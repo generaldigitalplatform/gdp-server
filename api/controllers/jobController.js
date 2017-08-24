@@ -97,12 +97,13 @@ exports.findJobStatusById = function(req,res){
 		lteQuery = new Date(req.body.toDate).toISOString();
 	}
 
-	// "JobStatus":6 // completed
+	// "JobStatus":4 // completed
 	// "JobStatus":3 // pending   
- //    "JobStatus":4 // rescheduled
+ //    "JobStatus":6 // rescheduled
+ //    "JobStatus":2 // Assigned
    
    
-	jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":6,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+	jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":4,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
 	if (err) return res.send(err);	
 	completedJobsCount = count;
 
@@ -110,7 +111,11 @@ exports.findJobStatusById = function(req,res){
 			if (err) return res.send(err);			
 			pendingJobsCount = count;			
 
-			jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":4,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+			jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":2,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+				if (err) return res.send(err);			
+				pendingJobsCount += count;
+
+			jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":6,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
 				if (err) return res.send(err);			
 				rescheduledJobsCount = count;
 			
@@ -122,6 +127,7 @@ exports.findJobStatusById = function(req,res){
 						"completedJobs":completedJobsCount,
 						"pendingJobs":pendingJobsCount,
 						"rescheduledJobs":rescheduledJobsCount
+						});
 					});
 				});
 			});
@@ -167,7 +173,7 @@ exports.editJobById = function(req,res){
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
 	var updateData = req.body;
-	var options ='';// {upsert:true,new: true};
+	var options = {upsert:true,new: true};
 	var jobObjId;
 	var query;
 	if(req.params.Id.length > 12){
@@ -178,7 +184,7 @@ exports.editJobById = function(req,res){
 		query = {"JobId":Number(req.params.Id)};
 	}
 	jobModel.findOneAndUpdate(query,{$set:{"JobTitle":updateData.JobTitle,"JobDescription":updateData.JobDescription,"JobScheduledTime":updateData.JobScheduledTime,
-	"JobStatus":updateData.JobStatus,"JobLocation":updateData.JobLocation,"CustomerDetails.FirstName":updateData.CustomerDetails.FirstName,
+	"JobStatus":updateData.JobStatus,"JobLocation":updateData.CustomerDetails.Location,"CustomerDetails.FirstName":updateData.CustomerDetails.FirstName,
 "CustomerDetails.Address":updateData.CustomerDetails.Address,"CustomerDetails.PrimaryPhone":updateData.CustomerDetails.PrimaryPhone
 ,"EmployeeDetails.EmployeeId":updateData.EmployeeDetails.EmployeeId,"EmployeeDetails.FirstName":updateData.EmployeeDetails.FirstName}},options,function(err,profile){
 		if (err) return res.send(err);
