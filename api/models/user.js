@@ -14,6 +14,13 @@ var UserSchema = new mongoose.Schema({
     lastname: {
         type: String
     },
+    primaryphone: {
+        type: Number,
+        required: true
+    },
+    secondaryphone: {
+        type: Number
+    },
     email: {
         type: String,
         lowercase: true,

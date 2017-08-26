@@ -1,5 +1,5 @@
 var jwt = require('jsonwebtoken');  
-var User = require('../models/user');
+var User = require('../models/User');
 var authConfig = require('../config/auth');
  
 function generateToken(user){
@@ -14,6 +14,8 @@ function setUserInfo(request){
         employeeid:request.employeeid,
         firstname:request.firstname,
         lastname:request.lastname,
+        primaryphone:request.primaryphone,
+        secondaryphone:request.secondaryphone,
         email: request.email,
         role: request.role
     };
@@ -34,7 +36,9 @@ exports.register = function(req, res, next){
  
     var employeeid=req.body.employeeid;
     var firstname=req.body.firstname;
-    var lastname=req.body.lastname;    
+    var lastname=req.body.lastname;
+    var primaryphone=req.body.primaryphone;
+    var secondaryphone=req.body.secondaryphone;     
     var email = req.body.email;
     var password = req.body.password;
     var role = req.body.role;
@@ -46,11 +50,12 @@ exports.register = function(req, res, next){
     if(!firstname){
         return res.status(422).send({error: 'You must enter Name'});
     }
-
+    if(!primaryphone){
+        return res.status(422).send({error: 'You must enter Primary Phone Number'});
+    }
     if(!email){
         return res.status(422).send({error: 'You must enter an Email Address'});
-    }
- 
+    } 
     if(!password){
         return res.status(422).send({error: 'You must enter a Password'});
     }
@@ -88,6 +93,8 @@ exports.register = function(req, res, next){
             employeeid: employeeid,
             firstname: firstname,
             lastname: lastname,
+            primaryphone: primaryphone,
+            secondaryphone: secondaryphone,
             email: email,
             password: password,
             role: role

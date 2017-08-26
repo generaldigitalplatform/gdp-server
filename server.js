@@ -15,6 +15,8 @@ var express 	= require('express'),
 	fieldForceModel = require('./api/models/fieldforceModel'),
 	deviceTokenModel = require('./api/models/DeviceTokenModel');
 	pushMessageModel = require('./api/models/PushMessageModel');
+	userModel = require('./api/models/User');
+
 
 
 app.options('*', cors()); 
@@ -33,6 +35,8 @@ var	employeeProfileroutes= require('./api/routes/EmployeeProfileRoute');
 var fieldForceRoutes = require('./api/routes/fieldforceRoutes');
 var deviceTokenRoute = require('./api/routes/DeviceTokenRoute');
 var pushMessageRoute = require('./api/routes/PushMessageRoute');
+var userRoute = require('./api/routes/userRoute');
+var googleMapsRoute = require('./api/routes/googleMaps');
 
 
 var routers = require('./api/routes');
@@ -41,15 +45,17 @@ app.use('/employee',employeeProfileroutes);
 app.use('/customer',customerProfileroutes);
 
 var port = 3000;
-var httpServer = require('http').createServer(app);
+//var httpServer = require('http').createServer(app);
 httpServer.listen(process.env.PORT,process.env.IP, function() {
-//httpServer.listen(port, function() {
+httpServer.listen(port, function() {
     console.log('gdmp-server running on port ' + port + '.');
 });
 
 fieldForceRoutes(app);
 deviceTokenRoute(app);
 pushMessageRoute(app);
+userRoute(app);
+googleMapsRoute(app);
 
 routers(app);
 module.exports = app;

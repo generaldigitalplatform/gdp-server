@@ -9,10 +9,11 @@
   },
   "author": "Manikandan Muthu",
   "license": "ISC",
-  "engines":{
-    "node":"6.11.2"
+  "engines": {
+    "node": "6.11.2"
   },
   "dependencies": {
+    "@google/maps": "^0.4.3",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.17.2",
     "compression": "^1.7.0",
@@ -24,7 +25,8 @@
     "morgan": "^1.8.2",
     "passport": "^0.3.2",
     "passport-jwt": "^2.2.1",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "request": "^2.81.0"
   },
   "devDependencies": {
     "jasmine": "^2.6.0",

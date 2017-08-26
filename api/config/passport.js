@@ -1,5 +1,5 @@
 var passport = require('passport');
-var User = require('../models/user');
+var User = require('../models/User');
 var config = require('./auth');
 var JwtStrategy = require('passport-jwt').Strategy;
 var ExtractJwt = require('passport-jwt').ExtractJwt;
