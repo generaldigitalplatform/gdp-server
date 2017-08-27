@@ -4,6 +4,7 @@ var express = require('express'),
 var pushMessageRoute = express.Router(),
     pushMessageController = require('../controllers/PushMessageController');
 
+// fcm message controller
 module.exports = function(app){
 
  router.use('/fcm',pushMessageRoute);
