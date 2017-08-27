@@ -13,7 +13,7 @@ exports.createDeviceToken = function(req,res){
 		if(deviceProfile !== null)
 		{	
 			var options ={upsert:true,new: true};	
-			deviceTokenModel.update(query,{$set:{"DeviceToken":req.body.DeviceToken}},options,function(err,profile){
+			deviceTokenModel.update(query,{$set:{"FCMRegistrationToken":req.body.FCMRegistrationToken}},options,function(err,profile){
 				if (err) return res.send(err);;
 				if(profile)
 				{

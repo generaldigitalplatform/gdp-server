@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "gdsplatform-174418",
+  "private_key_id": "377133539fc8034f5d251f2bd1946fe60c65b0c6",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQChqR7avUeygWfB\nXS3Z8Dc5Wq1MKMLJzVqMQqqXTgqJHRs1zi4KAmp1K3YUwHcTTmc7MqNUIyBspvDs\nWl21ge5JJMFmj/OsrUYrXQnz4U4Wl/RBjXWV/6QQJkOKH/5o5Bm1qC7nemstLiIZ\nk/2sUSUJZsHKTDpY5XPKlCTMzMrjfDb675nrcvmQ+ld20p0bSS9AOhbHLP3BW0To\nzyHZgCZtUV2TQ6MW6aBTEKWckHlO01aVdNc2JdU/BMql4t/HSGLFG2x/OPvJFrxA\n16n0TeUs4PLZQpJAX998xJ6Gw27tR7Y51liBg11dhb1q7LtFXx8xpGahARBg8y1k\nkb5USxpJAgMBAAECggEAJKpvT1T1bUj476wy4Vagq99DZX3sOimboyretr0SWily\nGbjHC+mi3CrsmAXULBqRAuX4EfX6nXIavDy9utR6p3fQ7rJxJeXR/7VVM82S8MBr\nu696LziBbVFEadBaW096/k7kPoevRdrMDKmadEoeQJzgEMJLzIxUQCrsEtBTJxeR\nff9kH5KbkoZzZDlst1hXkoVBBuv4VpWtQaxkTIzJ1a2QLTJ1/d6pPAhZSByS9xzm\nA6GfMaIq1ceRhdOAT/zzDu7Nbx1SwvH4Q8ArT3WtJcIbOdQQBxySw529aYgz1tw5\nv+jU3cjISbPv3Gw3i1Mxz6AbbsMxchxyZLmR9SYFhQKBgQDaJ69O9eWUyYhi3rxw\nZxQcVRjpwJEoJtjXmxkU+E/mD9z/ZQZtIDFIvlwzz47Sgdu/Z8SMdb+4wow394Uu\ndeJV0JL5xNw8J4NQBGUVvKphbyLHWM1ulCPvgIyhZm1pAS9cJP/qm15KU8Lq8Io5\nkbwRSYd4Be9mH5iZ1L9ik72grQKBgQC9tIGylV5+hSnw3MXy5FFEw0nLXeJKpZ0K\n9hAouIqzq6RuC/SN5o3aMpCtMYG3i90wxdWdwWVXUtdrvQ1VkKtxlYyAhk+2lslJ\ndcUEky08rqFIoWmHj3q4UrOaXh2WTUxHvLD5Yd1XXmfoW36t0QXnrhmvQluejB5h\nGMnwEIRnjQKBgQCF7ZsYlKmPQHJ0kF2LfBzCkBOtXcU/qymwo80wLImQqeh4+mKJ\nmBvplsQwIpqB7askxOXLfXZoTTecHF8s+L4tBNFWeV7jpzZcZ3ZPc/X9vybQz1m/\nKz8sh/TOGX3N2yZiIWzjcOLgKrAdX/LcCPY2fremHa6tOXSL7CpasGzYOQKBgC3x\niXe2tSvvFDlBPq+UnBoLMdQO6L8rXN1Kup8iEnVxHGGKg6/aJoCxvlgzpTbOqMMn\nJpUOQXzkk0eEgbY3U04u6dg2rxeJbTZdT1nMSyhnIqh0bxplpVL+tICuSnwcPF0j\nVbkP+osuUfv0LLnr5YI2qAHKEGZViQX6+u0pEugBAoGBALZciYojRwsJMi1qYZZa\nUgP72YCJNC7wASc8wnQCStJaaHlkZYT4VrtWh6Lz2DOy2JtH57bVq9bXD9aaLPmi\n3IjdMNH8PbTnfbWw8fKDN0b9XYM3sNLljK6qe7DFIFIr9JQ3LRvAnAmGjaa0i4vu\nSyQdwKYdk2KBmDIvzNWVI1p0\n-----END PRIVATE KEY-----\n",
+  "client_email": "gdsplatform@gdsplatform-174418.iam.gserviceaccount.com",
+  "client_id": "112417291392450115970",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/gdsplatform%40gdsplatform-174418.iam.gserviceaccount.com"
+}

@@ -3,6 +3,7 @@ var mongoose = require('mongoose'),
 
 var DeviceTokenSchema = new Schema({
 	DeviceToken:String,
+	FCMRegistrationToken:String,
 	UserId:String
 },{timestamps:true},{"strict":false});
 

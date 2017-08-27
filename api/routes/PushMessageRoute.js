@@ -6,8 +6,10 @@ var pushMessageRoute = express.Router(),
 
 module.exports = function(app){
 
-  router.use('/push',pushMessageRoute);
-  pushMessageRoute.post('/message',pushMessageController.pushMessageToUser);
+ router.use('/fcm',pushMessageRoute);
 
-  app.use('/api',router);
+ pushMessageRoute.post('/message',pushMessageController.pushMessageToDevice);
+ pushMessageRoute.post('/regtoken',pushMessageController.saveFCMregistrationToken);
+
+ app.use('/api',router);
 }

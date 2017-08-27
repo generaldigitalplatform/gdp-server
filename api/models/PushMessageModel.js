@@ -1,9 +1,10 @@
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema;
 
-var PushMessageSchema = new Schema({
+var FCMSchema = new Schema({
 	DeviceToken:String,
+	FCMregistrationToken:String,
 	UserId:String
 },{timestamps:true},{"strict":false});
 
-module.exports = mongoose.model("PushMessage",PushMessageSchema);
+module.exports = mongoose.model("FCM",FCMSchema);
