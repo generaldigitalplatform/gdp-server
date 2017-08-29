@@ -8,12 +8,13 @@ exports.findAllJobs = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	
-	if(req.param('EmpId')){
-		query = {"EmployeeDetails.EmployeeId":req.param('EmpId')}
-	}
-	else if(req.param('JobObjId')){
-		query = {"_id":req.param('JobObjId')}
-	}
+	if(req.param('EmpId') && req.param('jobStatus')){
+		var jobStatusCode;
+		if(req.param('jobStatus') === 'NotCompleted'){
+			jobStatusCode = 4;
+		}
+		query = {"EmployeeDetails.EmployeeId":req.param('EmpId'), "JobStatus": { $not: { $eq: jobStatusCode } } }; // completed job status is 4	
+	}	
 	else if(req.param('fromDate') && req.param('toDate')){
 
 		var fromDate = req.param('fromDate');
@@ -28,6 +29,9 @@ exports.findAllJobs = function(req,res){
 		}
 	   
 		query = {"createdAt":{$gte:gteQuery,$lte:lteQuery}}		
+	}		
+	else if(req.param('JobObjId')){
+		query = {"_id":req.param('JobObjId')}
 	}
 	else if(req.param('jobStatus')){
 		var jobStatusCode;
@@ -35,6 +39,9 @@ exports.findAllJobs = function(req,res){
 			jobStatusCode = 4;
 		}
 		query = { "JobStatus": { $not: { $eq: jobStatusCode } } }; // completed job status is 4		
+	}
+	else if(req.param('EmpId')){
+		query = {"EmployeeDetails.EmployeeId":req.param('EmpId')}
 	}	
 	else{
 		query = {}
