@@ -7,9 +7,61 @@ var mongoose = require('mongoose'),
 exports.findAllJobs = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	var Jobs;
-	var query=[];
-	jobModel.find({},function(err,profile){
+	
+	if(req.param('EmpId')){
+		query = {"EmployeeDetails.EmployeeId":req.param('EmpId')}
+	}
+	else if(req.param('JobObjId')){
+		query = {"_id":req.param('JobObjId')}
+	}
+	else if(req.param('fromDate') && req.param('toDate')){
+
+		var fromDate = req.param('fromDate');
+		var toDate = req.param('toDate');
+		
+		gteQuery = new Date(fromDate).toISOString();
+		if(fromDate == toDate){
+			lteQuery = new Date(toDate).toISOString();
+		}
+		else{
+			lteQuery = new Date(toDate).toISOString();
+		}
+	   
+		query = {"createdAt":{$gte:gteQuery,$lte:lteQuery}}		
+	}
+	else if(req.param('jobStatus')){
+		var jobStatusCode;
+		if(req.param('jobStatus') === 'NotCompleted'){
+			jobStatusCode = 4;
+		}
+		query = { "JobStatus": { $not: { $eq: jobStatusCode } } }; // completed job status is 4		
+	}	
+	else{
+		query = {}
+	}
+	jobModel.find(query,function(err,profile){
+			if(err) return res.send(err);
+			res.send(profile);		
+	});
+};
+exports.findJobsBy = function(req,res){
+	res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	var lteQuery;
+	var gteQuery;
+	gteQuery = new Date(req.body.fromDate).toISOString();
+	if(req.body.fromDate == req.body.toDate){
+		lteQuery = new Date(req.body.toDate).toISOString();
+	}
+	else{
+		lteQuery = new Date(req.body.toDate).toISOString();
+	}
+   
+	query = {"createdAt":{$gte:gteQuery,$lte:lteQuery}}
+
+//	var query = { "JobStatus": { $not: { $eq: 4 } } }; // completed job status is 4
+	
+	jobModel.find(query,function(err,profile){
 			if(err) return res.send(err);
 			res.send(profile);		
 	});
