@@ -30,7 +30,7 @@ exports.findAllJobs = function(req,res){
 	// 	}
 	// 	query = {"EmployeeDetails.EmployeeId":req.param('EmpId'), "JobStatus": { $not: { $eq: jobStatusCode } } }; // completed job status is 4	
 	// }
-	else if(req.param('FieldForce') && req.param('JobStatus')){		
+	else if(req.param('FieldForce') && req.param('JobStatus') || req.param('JobStatus') === null ){		
 		query = {"EmployeeDetails.EmployeeId":req.param('FieldForce'),"JobStatus":req.param('JobStatus')}
 	}
 	// else if(req.param('FieldForce') && req.param('JobStatus')){
@@ -199,6 +199,7 @@ exports.findJobStatusById = function(req,res){
 	var completedJobsCount;
 	var rescheduledJobsCount;
 	var pendingJobsCount;
+	var cancelledJobsCount;
 	var allocatedJobsCount;
 	var lteQuery;
 	var gteQuery;
@@ -232,15 +233,22 @@ exports.findJobStatusById = function(req,res){
 			jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":6,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
 				if (err) return res.send(err);			
 				rescheduledJobsCount = count;
+
+				jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":5,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+				if (err) return res.send(err);			
+				cancelledJobsCount = count;
 			
-				jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
-					if (err) return res.send(err);				
-					totalJobsCount = count;				
-				res.send({
-						"totalJobs":totalJobsCount,
-						"completedJobs":completedJobsCount,
-						"pendingJobs":pendingJobsCount,
-						"rescheduledJobs":rescheduledJobsCount
+					jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+						if (err) return res.send(err);				
+						totalJobsCount = count;
+					
+					 res.send({
+							"totalJobs":totalJobsCount,
+							"completedJobs":completedJobsCount,
+							"pendingJobs":pendingJobsCount,
+							"rescheduledJobs":rescheduledJobsCount,
+							"cancelledJobs":cancelledJobsCount
+							});
 						});
 					});
 				});
