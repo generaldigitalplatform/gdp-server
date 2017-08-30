@@ -7,14 +7,35 @@ var mongoose = require('mongoose'),
 exports.findAllJobs = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	
-	if(req.param('EmpId') && req.param('jobStatus')){
-		var jobStatusCode;
-		if(req.param('jobStatus') === 'NotCompleted'){
-			jobStatusCode = 4;
-		}
-		query = {"EmployeeDetails.EmployeeId":req.param('EmpId'), "JobStatus": { $not: { $eq: jobStatusCode } } }; // completed job status is 4	
-	}	
+	var query = {};
+	// query1 = {"EmployeeDetails.EmployeeId":req.param('EmpId'),"JobStatus": { $not: { $eq: 5 } } , "JobStatus": { $not: { $eq: 4 } } }; // completed job status is 4	
+	var jobStatus,empId;
+    // get not completed and not cancelled jbs for device 		
+	if(req.query.hasOwnProperty('EmpId')){
+    	empId = {
+    		"EmployeeDetails.EmployeeId" : req.query.EmpId
+    	}
+    	if(req.query.hasOwnProperty('JobStatus')){
+			if(req.query.JobStatus.match("NotCompleted") && req.query.JobStatus.match("Cancelled")){
+				//jobStatus = {$and: [{"JobStatus":{$not:{ $eq: 4 }}},{"JobStatus":{ $eq: 5 }}]};
+				jobStatus = {$and: [{"JobStatus":{$ne: 4 }},{"JobStatus":{ $ne: 5 }}]};
+			}		
+		}	
+    	query = Object.assign(jobStatus,empId);
+	}
+	// else if(req.param('EmpId') && req.param('jobStatus')){
+	// 	var jobStatusCode;
+	// 	if(req.param('jobStatus') === 'NotCompleted'){
+	// 		jobStatusCode = 4;
+	// 	}
+	// 	query = {"EmployeeDetails.EmployeeId":req.param('EmpId'), "JobStatus": { $not: { $eq: jobStatusCode } } }; // completed job status is 4	
+	// }
+	else if(req.param('FieldForce') && req.param('JobStatus')){		
+		query = {"EmployeeDetails.EmployeeId":req.param('FieldForce'),"JobStatus":req.param('JobStatus')}
+	}
+	// else if(req.param('FieldForce') && req.param('JobStatus')){
+	// 	query = {"EmployeeDetails.EmployeeId":req.param('FieldForce'), "JobStatus": { $eq: Number(req.param('JobStatus'))}}
+	// }	
 	else if(req.param('fromDate') && req.param('toDate')){
 
 		var fromDate = req.param('fromDate');
@@ -33,15 +54,49 @@ exports.findAllJobs = function(req,res){
 	else if(req.param('JobObjId')){
 		query = {"_id":req.param('JobObjId')}
 	}
-	else if(req.param('jobStatus')){
+	else if(req.param('JobStatus')){
 		var jobStatusCode;
-		if(req.param('jobStatus') === 'NotCompleted'){
+		if(req.param('JobStatus') === 'NotCompleted'){
 			jobStatusCode = 4;
+			query = { "JobStatus": { $not: { $eq: jobStatusCode } } }; // completed job status is 4
 		}
-		query = { "JobStatus": { $not: { $eq: jobStatusCode } } }; // completed job status is 4		
+		else if(req.param('JobStatus') === '6'){
+			jobStatusCode = 6;
+			query = { "JobStatus": { $eq: jobStatusCode } } ;
+		}
+		else if(req.param('JobStatus') === '5'){
+			jobStatusCode = 5;
+			query = { "JobStatus": { $eq: jobStatusCode } } ;
+		}
+		else if(req.param('JobStatus') === '4'){
+			jobStatusCode = 4;
+			query = { "JobStatus": { $eq: jobStatusCode } } ;
+		}
+		else if(req.param('JobStatus') === '3'){
+			jobStatusCode = 3;
+			query = { "JobStatus": { $eq: jobStatusCode } } ;
+		}
+		else if(req.param('JobStatus') === '2'){
+			jobStatusCode = 2;
+			query = { "JobStatus": { $eq: jobStatusCode } } ;
+		}
+		else if(req.param('JobStatus') === '1'){
+			jobStatusCode = 1;
+			query = { "JobStatus": { $eq: jobStatusCode } } ;
+		}
+		else if(req.param('JobStatus') === '0'){
+			jobStatusCode = 0;
+			query = { "JobStatus": { $eq: jobStatusCode } } ;
+		}
+		//query = { "JobStatus": { $not: { $eq: jobStatusCode } } }; // completed job status is 4
+		//query = { "JobStatus": { $eq: jobStatusCode } } ; // completed job status is 4		
+		
 	}
-	else if(req.param('EmpId')){
-		query = {"EmployeeDetails.EmployeeId":req.param('EmpId')}
+	else if(req.param('FieldForce')){
+		query = {"EmployeeDetails.EmployeeId":req.param('FieldForce')}
+	}
+	else if(req.param('JobLocation')){
+		query = {"CustomerDetails.Location":req.param('JobLocation')}
 	}	
 	else{
 		query = {}
@@ -197,11 +252,35 @@ exports.createNewJob = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	var newJob = new jobModel(req.body);
-	newJob.save(function(err, profile){
-	if(err)
-	return res.send(err);
-	res.json(profile);
-	});
+
+	 var arr = req.body;// array of objects;
+     res = [];
+
+    for(var i=0; i< Object.keys(arr).length;i++){
+    	var newJob = new jobModel(arr[i]);
+    	newJob.save(function (err) {
+	        res.push(err);
+	        if (res.length === Object.keys(arr).length)
+	        {
+	            // Done
+	        }
+    });
+}
+	// arr.forEach(function (item) {
+	//     newJob.save(function (err) {
+	//         res.push(err);
+	//         if (res.length === arr.length)
+	//         {
+	//             // Done
+	//         }
+	//     });
+	// });
+
+	// newJob.create(function(err, profile){	
+	// if(err)
+	// return res.send(err);
+	// res.json(profile);
+	// });
 }; 
 exports.updateJobById = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
