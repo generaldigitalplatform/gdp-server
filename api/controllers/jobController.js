@@ -7,100 +7,87 @@ var mongoose = require('mongoose'),
 exports.findAllJobs = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	var query = {};
-	// query1 = {"EmployeeDetails.EmployeeId":req.param('EmpId'),"JobStatus": { $not: { $eq: 5 } } , "JobStatus": { $not: { $eq: 4 } } }; // completed job status is 4	
-	var jobStatus,empId;
-    // get not completed and not cancelled jbs for device 		
-	if(req.query.hasOwnProperty('EmpId')){
-    	empId = {
-    		"EmployeeDetails.EmployeeId" : req.query.EmpId
-    	}
-    	if(req.query.hasOwnProperty('JobStatus')){
-			if(req.query.JobStatus.match("NotCompleted") && req.query.JobStatus.match("Cancelled")){
-				//jobStatus = {$and: [{"JobStatus":{$not:{ $eq: 4 }}},{"JobStatus":{ $eq: 5 }}]};
-				jobStatus = {$and: [{"JobStatus":{$ne: 4 }},{"JobStatus":{ $ne: 5 }}]};
-			}		
-		}	
-    	query = Object.assign(jobStatus,empId);
-	}
-	// else if(req.param('EmpId') && req.param('jobStatus')){
-	// 	var jobStatusCode;
-	// 	if(req.param('jobStatus') === 'NotCompleted'){
-	// 		jobStatusCode = 4;
-	// 	}
-	// 	query = {"EmployeeDetails.EmployeeId":req.param('EmpId'), "JobStatus": { $not: { $eq: jobStatusCode } } }; // completed job status is 4	
-	// }
-	else if(req.param('FieldForce') && req.param('JobStatus') || req.param('JobStatus') === null ){		
-		query = {"EmployeeDetails.EmployeeId":req.param('FieldForce'),"JobStatus":req.param('JobStatus')}
-	}
-	// else if(req.param('FieldForce') && req.param('JobStatus')){
-	// 	query = {"EmployeeDetails.EmployeeId":req.param('FieldForce'), "JobStatus": { $eq: Number(req.param('JobStatus'))}}
-	// }	
-	else if(req.param('fromDate') && req.param('toDate')){
+	var query = {
+		
+	};
 
-		var fromDate = req.param('fromDate');
-		var toDate = req.param('toDate');
-		
-		gteQuery = new Date(fromDate).toISOString();
-		if(fromDate == toDate){
-			lteQuery = new Date(toDate).toISOString();
-		}
-		else{
-			lteQuery = new Date(toDate).toISOString();
-		}
-	   
-		query = {"createdAt":{$gte:gteQuery,$lte:lteQuery}}		
-	}		
-	else if(req.param('JobObjId')){
-		query = {"_id":req.param('JobObjId')}
+	var jobStatus = req.param('JobStatus');
+	var fieldForce = req.param('FieldForce');
+	var customer = req.param('Customer');
+	var phone = req.param('Phone');
+	// var jobTitle = req.param('JobTitle');
+	// var jobDescription = req.param('JobDescription');
+
+	if(jobStatus === '0' && fieldForce === '0' && !customer && !phone){
+		query = {};
 	}
-	else if(req.param('JobStatus')){
-		var jobStatusCode;
-		if(req.param('JobStatus') === 'NotCompleted'){
-			jobStatusCode = 4;
-			query = { "JobStatus": { $not: { $eq: jobStatusCode } } }; // completed job status is 4
-		}
-		else if(req.param('JobStatus') === '6'){
-			jobStatusCode = 6;
-			query = { "JobStatus": { $eq: jobStatusCode } } ;
-		}
-		else if(req.param('JobStatus') === '5'){
-			jobStatusCode = 5;
-			query = { "JobStatus": { $eq: jobStatusCode } } ;
-		}
-		else if(req.param('JobStatus') === '4'){
-			jobStatusCode = 4;
-			query = { "JobStatus": { $eq: jobStatusCode } } ;
-		}
-		else if(req.param('JobStatus') === '3'){
-			jobStatusCode = 3;
-			query = { "JobStatus": { $eq: jobStatusCode } } ;
-		}
-		else if(req.param('JobStatus') === '2'){
-			jobStatusCode = 2;
-			query = { "JobStatus": { $eq: jobStatusCode } } ;
-		}
-		else if(req.param('JobStatus') === '1'){
-			jobStatusCode = 1;
-			query = { "JobStatus": { $eq: jobStatusCode } } ;
-		}
-		else if(req.param('JobStatus') === '0'){
-			jobStatusCode = 0;
-			query = { "JobStatus": { $eq: jobStatusCode } } ;
-		}
-		//query = { "JobStatus": { $not: { $eq: jobStatusCode } } }; // completed job status is 4
-		//query = { "JobStatus": { $eq: jobStatusCode } } ; // completed job status is 4		
-		
-	}
-	else if(req.param('FieldForce')){
-		query = {"EmployeeDetails.EmployeeId":req.param('FieldForce')}
-	}
-	else if(req.param('JobLocation')){
-		query = {"CustomerDetails.Location":req.param('JobLocation')}
-	}	
 	else{
-		query = {}
+		if(jobStatus.length !== 0 && jobStatus !== '0') query["JobStatus"] = Number(jobStatus);
+		if(customer.length !== 0 && customer !== '0')  query["CustomerDetails.FirstName"] = customer;
+		if(fieldForce.length !== 0 && fieldForce !== '0') query["EmployeeDetails.EmployeeId"] = fieldForce;
+		if(phone.length !== 0 && phone !== '0') query["CustomerDetails.PrimaryPhone"] = Number(phone);
 	}
+	
+	// if(req.param('fromDate') && req.param('toDate')){
+
+	// 	var fromDate = req.param('fromDate');
+	// 	var toDate = req.param('toDate');
+		
+	// 	gteQuery = new Date(fromDate).toISOString();
+	// 	if(fromDate == toDate){
+	// 		lteQuery = new Date(toDate).toISOString();
+	// 	}
+	// 	else{
+	// 		lteQuery = new Date(toDate).toISOString();
+	// 	}
+	   
+	// 	query = {"createdAt":{$gte:gteQuery,$lte:lteQuery}}		
+	// }
+	// else if(req.param('JobStatus')){
+	// 	var jobStatusCode;
+	// 	if(req.param('JobStatus') === 'NotCompleted'){
+	// 		jobStatusCode = 4;
+	// 		query = { "JobStatus": { $not: { $eq: jobStatusCode } } }; // completed job status is 4
+	// 	}
+	// 	else if(req.param('JobStatus') === '6'){
+	// 		jobStatusCode = 6;
+	// 		query = { "JobStatus": { $eq: jobStatusCode } } ;
+	// 	}
+	// 	else if(req.param('JobStatus') === '5'){
+	// 		jobStatusCode = 5;
+	// 		query = { "JobStatus": { $eq: jobStatusCode } } ;
+	// 	}
+	// 	else if(req.param('JobStatus') === '4'){
+	// 		jobStatusCode = 4;
+	// 		query = { "JobStatus": { $eq: jobStatusCode } } ;
+	// 	}
+	// 	else if(req.param('JobStatus') === '3'){
+	// 		jobStatusCode = 3;
+	// 		query = { "JobStatus": { $eq: jobStatusCode } } ;
+	// 	}
+	// 	else if(req.param('JobStatus') === '2'){
+	// 		jobStatusCode = 2;
+	// 		query = { "JobStatus": { $eq: jobStatusCode } } ;
+	// 	}
+	// 	else if(req.param('JobStatus') === '1'){
+	// 		jobStatusCode = 1;
+	// 		query = { "JobStatus": { $eq: jobStatusCode } } ;
+	// 	}
+	// 	else if(req.param('JobStatus') === '0'){
+	// 		jobStatusCode = 0;
+	// 		query = { "JobStatus": { $eq: jobStatusCode } } ;
+	// 	}	
+		
+	// }
+	// else if(req.param('FieldForce')){
+	// 	query = {"EmployeeDetails.EmployeeId":req.param('FieldForce')}
+	// }
+	// else if(req.param('JobLocation')){
+	// 	query = {"CustomerDetails.Location":req.param('JobLocation')}
+	// }	
+	// else{
+	// 	query = {}
+	// }
 	jobModel.find(query,function(err,profile){
 			if(err) return res.send(err);
 			res.send(profile);		
@@ -131,9 +118,22 @@ exports.findJobsBy = function(req,res){
 exports.findJobById = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	var CustomerDetailsJson = {CustomerDetails:{ContactAddress:[]}};
+	
+	var jobStatus,empId;
+	var query = {};
+	// if(req.query.hasOwnProperty('EmpId')){
+ //    	empId = {
+ //    		"EmployeeDetails.EmployeeId" : req.query.EmpId
+ //    	}
+ //    	if(req.query.hasOwnProperty('JobStatus')){
+	// 		if(req.query.JobStatus.match("NotCompleted") && req.query.JobStatus.match("Cancelled")){
+	// 			//jobStatus = {$and: [{"JobStatus":{$not:{ $eq: 4 }}},{"JobStatus":{ $eq: 5 }}]};
+	// 			jobStatus = {$and: [{"JobStatus":{$ne: 4 }},{"JobStatus":{ $ne: 5 }}]};
+	// 		}		
+	// 	}  
+	//query = Object.assign(empId,jobStatus);  	
+	// }
 	var jobObjId;
-	var query;
 	if(req.params.Id.length > 12){
 		jobObjId = new ObjectId(req.params.Id);
 		query = {"_id":jobObjId};
@@ -141,7 +141,7 @@ exports.findJobById = function(req,res){
 	else{
 		query = {$or:[{"EmployeeDetails.EmployeeId":req.params.Id},{"JobId":req.params.Id}]};
 	}
-
+	
 	jobModel.find(query,function(err,profile){
 		if (err) return res.send(err);
 		if(profile)
