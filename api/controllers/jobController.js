@@ -3,14 +3,46 @@ var mongoose = require('mongoose'),
 	customerProfileModel = mongoose.model('CustomerProfile'),
 	ObjectId = require('mongoose').Types.ObjectId;
 	var extend = require('util')._extend;
+	var moment= require('moment');
 
 exports.findAllJobs = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	var query = {
-		
-	};
+	var query = {};
+	var lteQuery;
+	var gteQuery;
+	var fromDate;
+	var toDate;
+	var startTime = "T00:00:00.000Z";
+	var toTime = "T23:59:00.000Z";;
+	//var todayQuery = {"createdAt" : new ISODate(req.Today)};
+	
+	// else if(req.param('JobDates') === '1'){
+	// 	fromDate = moment(Date()).format("YYYY-MM-DD");
+	// 	toDate = moment(Date()).format("YYYY-MM-DD");
+	// }
+	// else if(req.param('JobDates') === '2'){
+	// 	fromDate = moment(Date()).format("YYYY-MM-DD");
+	// 	toDate = moment(Date()).format("YYYY-MM-DD");
+	// }
+	// else if(req.param('JobDates') === '3'){
+	// 	fromDate = moment(Date()).format("YYYY-MM-DD");
+	// 	toDate = moment(Date()).format("YYYY-MM-DD");
+	// }
+	// else if(req.param('JobDates') === '4'){
+	// 	fromDate = moment(Date()).format("YYYY-MM-DD");
+	// 	toDate = moment(Date()).format("YYYY-MM-DD");
+	// }
 
+	// gteQuery = new Date(req.body.fromDate).toISOString();
+	// if(req.body.fromDate == req.body.toDate){
+	// 	lteQuery = new Date(req.body.toDate).toISOString();
+	// }
+	// else{
+	// 	lteQuery = new Date(req.body.toDate).toISOString();
+	// }
+
+	var jobDates = req.param('JobDates');
 	var jobStatus = req.param('JobStatus');
 	var fieldForce = req.param('FieldForce');
 	var customer = req.param('Customer');
@@ -18,10 +50,61 @@ exports.findAllJobs = function(req,res){
 	// var jobTitle = req.param('JobTitle');
 	// var jobDescription = req.param('JobDescription');
 
-	if(jobStatus === '0' && fieldForce === '0' && !customer && !phone){
-		query = {};
+	if(jobDates ===  '0' && jobStatus === '0' && fieldForce === '0' && !customer && !phone){
+		gteQuery = moment(Date()).format("YYYY-MM-DD")+startTime;
+		lteQuery = moment(Date()).format("YYYY-MM-DD")+toTime;
+		query["createdAt"] = {$gte:gteQuery,$lte:lteQuery}
 	}
 	else{
+		if(jobDates.length !== 0 && jobDates === '0') {
+			gteQuery = moment(Date()).format("YYYY-MM-DD")+startTime;
+			lteQuery = moment(Date()).format("YYYY-MM-DD")+toTime;
+			query["createdAt"] = {$gte:gteQuery,$lte:lteQuery}
+		}
+		else if(jobDates.length !== 0 && jobDates === '1') {
+		
+			var today = new Date();
+			var yesterday = new Date(today);
+			yesterday.setDate(today.getDate()-1);
+
+			gteQuery = moment(yesterday).format("YYYY-MM-DD")+startTime;
+			lteQuery = moment(yesterday).format("YYYY-MM-DD")+toTime;
+
+			query["createdAt"] = {$gte:gteQuery,$lte:lteQuery}
+		}
+		else if(jobDates.length !== 0 && jobDates === '2') {
+		
+			var today = new Date();
+			var lastweek = new Date(today);
+			lastweek.setDate(today.getDate()-7);
+
+			lteQuery = moment(today).format("YYYY-MM-DD")+startTime;
+			gteQuery = moment(lastweek).format("YYYY-MM-DD")+toTime;
+
+			query["createdAt"] = {$gte:gteQuery,$lte:lteQuery}
+		}
+		else if(jobDates.length !== 0 && jobDates === '3') {
+		
+			var today = new Date();
+			var lastweek = new Date(today);
+			lastweek.setDate(today.getDate()-30);
+
+			lteQuery = moment(today).format("YYYY-MM-DD")+startTime;
+			gteQuery = moment(lastweek).format("YYYY-MM-DD")+toTime;
+
+			query["createdAt"] = {$gte:gteQuery,$lte:lteQuery}
+		}
+		else if(jobDates.length !== 0 && jobDates === '4') {
+		
+			var today = new Date();
+			var lastweek = new Date(today);
+			lastweek.setDate(today.getDate()-365);
+
+			lteQuery = moment(today).format("YYYY-MM-DD")+startTime;
+			gteQuery = moment(lastweek).format("YYYY-MM-DD")+toTime;
+
+			query["createdAt"] = {$gte:gteQuery,$lte:lteQuery}
+		}
 		if(jobStatus.length !== 0 && jobStatus !== '0') query["JobStatus"] = Number(jobStatus);
 		if(customer.length !== 0 && customer !== '0')  query["CustomerDetails.FirstName"] = customer;
 		if(fieldForce.length !== 0 && fieldForce !== '0') query["EmployeeDetails.EmployeeId"] = fieldForce;
