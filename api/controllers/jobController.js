@@ -201,25 +201,24 @@ exports.findJobsBy = function(req,res){
 exports.findJobById = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	
+	var jobObjId;
 	var jobStatus,empId;
 	var query = {};
 	if(req.query.hasOwnProperty('JobStatus')){
 		if(req.query.JobStatus.match("NotCompleted") && req.query.JobStatus.match("NotCancelled")){
 			query = {$and: [{"JobStatus":{$ne: 4 }},{"JobStatus":{ $ne: 5 }}]};
-		}		
+		}
+		query["EmployeeDetails.EmployeeId"] = req.params.Id;		
+	}	
+	//if(req.query.hasOwnProperty('EmpId')) query["EmployeeDetails.EmployeeId"] = req.query.EmpId;  	
+    
+	else if(req.params.Id.length > 12){
+		jobObjId = new ObjectId(req.params.Id);
+		query = {"_id":jobObjId};
 	}
-	query["EmployeeDetails.EmployeeId"] = req.params.Id;
-	//if(req.query.hasOwnProperty('EmpId')) query["EmployeeDetails.EmployeeId"] = req.query.EmpId;    	
-     	
-	// var jobObjId;
-	// if(req.params.Id.length > 12){
-	// 	jobObjId = new ObjectId(req.params.Id);
-	// 	query = {"_id":jobObjId};
-	// }
-	// else{
-	// 	query = {$or:[{"EmployeeDetails.EmployeeId":req.params.Id},{"JobId":req.params.Id}]};
-	// }
+	else {
+		query = {$or:[{"EmployeeDetails.EmployeeId":req.params.Id},{"JobId":req.params.Id}]};
+	}
 	
 	jobModel.find(query,function(err,profile){
 		if (err) return res.send(err);

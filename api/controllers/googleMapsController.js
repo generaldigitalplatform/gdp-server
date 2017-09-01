@@ -9,6 +9,10 @@ exports.findGeoLocation = function(req,res){
 	var lat = req.body.geo.lat; 
 	var lng = req.body.geo.lng;
 	var action = req.body.action;
+	var startdatetime = req.body.startdatetime;
+	var reachdatetime = req.body.reachdatetime;
+	var canceldatetime = req.body.canceldatetime;
+
 	var objectId = req.body.objectId;
 	var actionData;
 
@@ -25,7 +29,7 @@ exports.findGeoLocation = function(req,res){
     	if(action==='started'){
 	        	actionData = {
 	        		"StartedLocation" :{
-						"DateTime": new Date().toISOString(),
+						"DateTime": startdatetime,
 						"Area": address,
 						"Coordinates": [lat,lng]							
 	        	}
@@ -33,12 +37,20 @@ exports.findGeoLocation = function(req,res){
 	    } else if(action === 'reached'){
 	    	actionData = {
 	        		"ReachedLocation" :{
-						"DateTime": new Date().toISOString(),
+						"DateTime": reachdatetime,
 						"Area": address,
 						"Coordinates": [lat,lng]							
 	        	}
 	        }
-	    }      
+	    }else if(action === 'cancelled'){
+	    	actionData = {
+	        		"CancelledLocation" :{
+						"DateTime": canceldatetime,
+						"Area": address,
+						"Coordinates": [lat,lng]							
+	        	}
+	        }
+	    }       
     	var putStartJob = {     
         uri:db.job + objectId,
         method: 'PUT',
