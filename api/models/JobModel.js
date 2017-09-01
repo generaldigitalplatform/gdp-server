@@ -9,6 +9,7 @@ var JobSchema = new Schema({
 	JobScheduledTime:Date,
 	JobCreatedTime:Date,
 	JobDoneTime:Date,
+	JobCancelTime:Date,
 	JobLocation:String,
 	JobStatus:Number,
 	JobTimelineStatus:String,
