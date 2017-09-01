@@ -23,44 +23,49 @@ exports.findGeoLocation = function(req,res){
     request(options,function(error, response, body){
     	if(error) return error;
     	var Data = JSON.parse(body);
-    	var address = Data.results[0].formatted_address;
+    	if(Data.results.length > 0){
 
-    	if(action==='started'){
-	        	actionData = {
-	        		"StartedLocation" :{
-						"DateTime": startdatetime,
-						"Area": address,
-						"Coordinates": [lat,lng]							
-	        	}
-	        }
-	    } else if(action === 'reached'){
-	    	actionData = {
-	        		"ReachedLocation" :{
-						"DateTime": reachdatetime,
-						"Area": address,
-						"Coordinates": [lat,lng]							
-	        	}
-	        }
-	    }else if(action === 'cancelled'){
-	    	actionData = {
-	        		"CancelledLocation" :{
-						"DateTime": canceldatetime,
-						"Area": address,
-						"Coordinates": [lat,lng]							
-	        	}
-	        }
-	    }       
-    	var putStartJob = {     
-        uri:db.job + objectId,
-        method: 'PUT',
-        form:actionData,
-        headers: {'Content-Type': 'application/json',"Authorization": req.headers.authorization}   
-    	}  
+	    	var address = Data.results[0].formatted_address;
 
-        request(putStartJob,function(error, response, body){
-			if(error) return error;
-			res.json(response);
-        });   
+	    	if(action==='started'){
+		        	actionData = {
+		        		"StartedLocation" :{
+							"DateTime": startdatetime,
+							"Area": address,
+							"Coordinates": [lat,lng]							
+		        	}
+		        }
+		    } else if(action === 'reached'){
+		    	actionData = {
+		        		"ReachedLocation" :{
+							"DateTime": reachdatetime,
+							"Area": address,
+							"Coordinates": [lat,lng]							
+		        	}
+		        }
+		    }else if(action === 'cancelled'){
+		    	actionData = {
+		        		"CancelledLocation" :{
+							"DateTime": canceldatetime,
+							"Area": address,
+							"Coordinates": [lat,lng]							
+		        	}
+		        }
+		    }       
+	    	var putStartJob = {     
+	        uri:db.job + objectId,
+	        method: 'PUT',
+	        form:actionData,
+	        headers: {'Content-Type': 'application/json',"Authorization": req.headers.authorization}   
+	    	}  
+
+	        request(putStartJob,function(error, response, body){
+				if(error) return error;
+				res.json(response);
+	        });
+	    }else{
+	    	res.json({message:"No locations found for the given lat and lng"});
+	    }   
 
     });
 };
