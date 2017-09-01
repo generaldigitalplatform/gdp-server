@@ -11,11 +11,10 @@ exports.findGeoLocation = function(req,res){
 	var action = req.body.action;
 	var startdatetime = req.body.startdatetime;
 	var reachdatetime = req.body.reachdatetime;
-	var canceldatetime = req.body.canceldatetime;
+	var canceldatetime = req.body.canceldatetime; //
 
 	var objectId = req.body.objectId;
 	var actionData;
-
 
 	var options = {     
         uri:'http://maps.googleapis.com/maps/api/geocode/json?latlng='+lat + ',' + lng,
