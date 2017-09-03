@@ -47,10 +47,11 @@ exports.findAllJobs = function(req,res){
 	var fieldForce = req.param('FieldForce');
 	var customer = req.param('Customer');
 	var phone = req.param('Phone');
+	var jobId = req.param('JobId');
 	// var jobTitle = req.param('JobTitle');
 	// var jobDescription = req.param('JobDescription');
 
-	if(jobDates ===  '0' && jobStatus === '0' && fieldForce === '0' && !customer && !phone){
+	if(jobDates ===  '0' && jobId === '0' && jobStatus === '0' && fieldForce === '0' && !customer && !phone){
 		gteQuery = moment(Date()).format("YYYY-MM-DD")+startTime;
 		lteQuery = moment(Date()).format("YYYY-MM-DD")+toTime;
 		query["createdAt"] = {$gte:gteQuery,$lte:lteQuery}
@@ -109,6 +110,8 @@ exports.findAllJobs = function(req,res){
 		if(customer.length !== 0 && customer !== '0')  query["CustomerDetails.FirstName"] = customer;
 		if(fieldForce.length !== 0 && fieldForce !== '0') query["EmployeeDetails.EmployeeId"] = fieldForce;
 		if(phone.length !== 0 && phone !== '0') query["CustomerDetails.PrimaryPhone"] = Number(phone);
+		if(jobId.length !== 0 && jobId !== '0') query["JobId"] = jobId;
+
 	}
 	
 	// if(req.param('fromDate') && req.param('toDate')){

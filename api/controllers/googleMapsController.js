@@ -1,10 +1,10 @@
 var request = require('request'),
+	reqprom = require('request-promise'),
 	db = require('../config/database');
 
 //var serverkey = 'AAAAUGGsxGs:APA91bF1qVPPcbsSvYAbtcJzslTVFUEk3hpZOJWwbR_Rc8MBDZXpH8Bxf4Rn-SWXX4TxpMGF-3YWHDNC97i-wIxC4qPDq_htpsNr-eKTjOMKf7jftuKQD_nTOc_ZVIxNg7KscviAZUj8';  
 
 exports.findGeoLocation = function(req,res){
-
     
 	var lat = req.body.geo.lat; 
 	var lng = req.body.geo.lng;
@@ -16,16 +16,19 @@ exports.findGeoLocation = function(req,res){
 	var objectId = req.body.objectId;
 	var actionData;
 
+	var putStartJob = {};
+
 	var options = {     
         uri:'http://maps.googleapis.com/maps/api/geocode/json?latlng='+lat + ',' + lng,
-        method: 'POST'    
-    }
-    request(options,function(error, response, body){
-    	if(error) return error;
-    	var Data = JSON.parse(body);
-    	if(Data.results.length > 0){
+        method: 'POST',
+        json:true    
+    };
+    reqprom(options)
+    	.then(function(response){
 
-	    	var address = Data.results[0].formatted_address;
+			if(response.results.length > 0){
+
+	    	var address = response.results[0].formatted_address;
 
 	    	if(action==='started'){
 		        	actionData = {
@@ -51,21 +54,28 @@ exports.findGeoLocation = function(req,res){
 							"Coordinates": [lat,lng]							
 		        	}
 		        }
-		    }       
+		    } 
 	    	var putStartJob = {     
 	        uri:db.job + objectId,
 	        method: 'PUT',
 	        form:actionData,
+	        json:true,
 	        headers: {'Content-Type': 'application/json',"Authorization": req.headers.authorization}   
-	    	}  
-
-	        request(putStartJob,function(error, response, body){
-				if(error) return error;
-				res.json(response);
-	        });
-	    }else{
-	    	res.json({message:"No locations found for the given lat and lng"});
-	    }   
-
-    });
+	    	}
+	    	reqprom(putStartJob)
+	    		.then(function(response){	    			
+	    			res.json(response);
+	    		})
+	    		.catch(function(error){
+					console.log(error);
+				})
+	   		}
+	   		else{
+	     		res.json({message:"No locations found for the given lat and lng"});
+	    	}
+    		
+    	})    	
+    	.catch(function(error){
+    		console.log(error);
+    	})
 };
