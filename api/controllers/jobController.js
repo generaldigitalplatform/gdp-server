@@ -340,37 +340,50 @@ exports.findJobStatusById = function(req,res){
 exports.createNewJob = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	var newJob = new jobModel(req.body);
-
-// 	 var arr = req.body;// array of objects;
-//      res = [];
-
-//     for(var i=0; i< Object.keys(arr).length;i++){
-//     	var newJob = new jobModel(arr[i]);
-//     	newJob.save(function (err) {
-// 	        res.push(err);
-// 	        if (res.length === Object.keys(arr).length)
-// 	        {
-// 	            // Done
-// 	        }
-//     });
-// }
-	// arr.forEach(function (item) {
-	//     newJob.save(function (err) {
-	//         res.push(err);
-	//         if (res.length === arr.length)
-	//         {
-	//             // Done
-	//         }
-	//     });
+	// var newJob = new jobModel(req.body);
+	// newJob.save(function(err, profile){	
+	// if(err)
+	// return res.send(err);
+	// 	res.json(profile);
 	// });
 
-	newJob.save(function(err, profile){	
-	if(err)
-	return res.send(err);
-	res.json(profile);
+	var arr = req.body;
+    res = [];
+
+
+    for(var i=0; i< Object.keys(arr).length;i++){
+    	var newJob = new jobModel(arr[i]);
+    	newJob.save(function (err) {
+	        res.push(err);
+	        if (res.length === Object.keys(arr).length)
+	        {
+	            // Done
+	        }
+    });
+}
+
+
+};
+exports.testCreateNewJob = function(req,res){
+	res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	
+	var newJob = new jobModel(req.body);
+
+	var arr = req.body;
+    res = [];
+
+	arr.forEach(function (item) {
+	    newJob.save(function (err) {
+	        res.push(err);
+	        if (res.length === arr.length)
+	        {
+	            // Done
+	        }
+	    });
 	});
-}; 
+
+};  
 exports.updateJobById = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");

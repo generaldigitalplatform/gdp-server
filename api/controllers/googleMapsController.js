@@ -2,8 +2,6 @@ var request = require('request'),
 	reqprom = require('request-promise'),
 	db = require('../config/database');
 
-//var serverkey = 'AAAAUGGsxGs:APA91bF1qVPPcbsSvYAbtcJzslTVFUEk3hpZOJWwbR_Rc8MBDZXpH8Bxf4Rn-SWXX4TxpMGF-3YWHDNC97i-wIxC4qPDq_htpsNr-eKTjOMKf7jftuKQD_nTOc_ZVIxNg7KscviAZUj8';  
-
 exports.findGeoLocation = function(req,res){
     
 	var lat = req.body.geo.lat; 
@@ -56,18 +54,18 @@ exports.findGeoLocation = function(req,res){
 		        }
 		    } 
 	    	var putStartJob = {     
-	        uri:db.job + objectId,
-	        method: 'PUT',
-	        form:actionData,
-	        json:true,
-	        headers: {'Content-Type': 'application/json',"Authorization": req.headers.authorization}   
+		        uri:db.job + objectId,
+		        method: 'PUT',
+		        form:actionData,
+		        json:true,
+		        headers: {'Content-Type': 'application/json',"Authorization": req.headers.authorization}   
 	    	}
 	    	reqprom(putStartJob)
 	    		.then(function(response){	    			
 	    			res.json(response);
 	    		})
 	    		.catch(function(error){
-					console.log(error);
+					res.json(error);
 				})
 	   		}
 	   		else{
@@ -76,6 +74,6 @@ exports.findGeoLocation = function(req,res){
     		
     	})    	
     	.catch(function(error){
-    		console.log(error);
+    		res.json(error);
     	})
 };
