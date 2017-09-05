@@ -71,7 +71,8 @@ module.exports = function(app){
 
     jobRoutes.get('/job',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.findAllJobs);
     jobRoutes.post('/job',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.createNewJob);
-    
+    jobRoutes.post('/jobs',jobController.createNewJobs);
+
     jobRoutes.get('/job/:Id',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.findJobById);
     jobRoutes.put('/job/:Id',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.updateJobById);
     jobRoutes.put('/job/edit/:Id',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.editJobById);

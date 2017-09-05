@@ -297,61 +297,120 @@ exports.findJobStatusById = function(req,res){
 	// "JobStatus":3 // pending   
  //    "JobStatus":6 // rescheduled
  //    "JobStatus":2 // Assigned
-   
-   
-	jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":4,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
-	if (err) return res.send(err);	
-	completedJobsCount = count;
+    if(req.body.hasOwnProperty('employeeid')){
+		jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":4,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+		if (err) return res.send(err);	
+		completedJobsCount = count;
 
-		jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":3,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
-			if (err) return res.send(err);			
-			pendingJobsCount = count;			
-
-			jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":2,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+			jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":3,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
 				if (err) return res.send(err);			
-				pendingJobsCount += count;
+				pendingJobsCount = count;			
 
-			jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":6,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
-				if (err) return res.send(err);			
-				rescheduledJobsCount = count;
+				// jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":2,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+				// 	if (err) return res.send(err);			
+				// 	pendingJobsCount += count;
 
-				jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":5,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
-				if (err) return res.send(err);			
-				cancelledJobsCount = count;
-			
-					jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
-						if (err) return res.send(err);				
-						totalJobsCount = count;
-					
-					 res.send({
-							"totalJobs":totalJobsCount,
-							"completedJobs":completedJobsCount,
-							"pendingJobs":pendingJobsCount,
-							"rescheduledJobs":rescheduledJobsCount,
-							"cancelledJobs":cancelledJobsCount
+				jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":6,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+					if (err) return res.send(err);			
+					rescheduledJobsCount = count;
+
+					jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":5,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+					if (err) return res.send(err);			
+					cancelledJobsCount = count;
+				
+						jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+							if (err) return res.send(err);				
+							totalJobsCount = count;
+						
+						 res.send({
+								"totalJobs":totalJobsCount,
+								"completedJobs":completedJobsCount,
+								"pendingJobs":pendingJobsCount,
+								"rescheduledJobs":rescheduledJobsCount,
+								"cancelledJobs":cancelledJobsCount
+								});
 							});
 						});
 					});
-				});
+				//});
 			});
 		});
-	});	
+	}	
+ 	else {
+		jobModel.count(({"JobStatus":4,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+		if (err) return res.send(err);	
+		completedJobsCount = count;
+
+			jobModel.count(({"JobStatus":3,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+				if (err) return res.send(err);			
+				pendingJobsCount = count;			
+
+				// jobModel.count(({"JobStatus":2,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+				// 	if (err) return res.send(err);			
+				// 	pendingJobsCount += count;
+
+				jobModel.count(({"JobStatus":6,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+					if (err) return res.send(err);			
+					rescheduledJobsCount = count;
+
+					jobModel.count(({"JobStatus":5,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+					if (err) return res.send(err);			
+					cancelledJobsCount = count;
+				
+						jobModel.count(({"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+							if (err) return res.send(err);				
+							totalJobsCount = count;
+						
+						 res.send({
+								"totalJobs":totalJobsCount,
+								"completedJobs":completedJobsCount,
+								"pendingJobs":pendingJobsCount,
+								"rescheduledJobs":rescheduledJobsCount,
+								"cancelledJobs":cancelledJobsCount
+								});
+							});
+						});
+					});
+				//});
+			});
+		});
+	}
+   
 };
 exports.createNewJob = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	// var newJob = new jobModel(req.body);
-	// newJob.save(function(err, profile){	
-	// if(err)
-	// return res.send(err);
-	// 	res.json(profile);
-	// });
+	var newJob = new jobModel(req.body);
+	newJob.save(function(err, profile){	
+	if(err)
+	return res.send(err);
+		res.json(profile);
+	});
 
+	// var arr = req.body;
+ //    res = [];
+
+
+ //    for(var i=0; i< Object.keys(arr).length;i++){
+ //    	var newJob = new jobModel(arr[i]);
+ //    	newJob.save(function (err) {
+	//         res.push(err);
+	//         if (res.length === Object.keys(arr).length)
+	//         {
+	//             // Done
+	//         }
+ //    });
+//}
+
+
+};
+exports.createNewJobs = function(req,res){
+	res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	
 	var arr = req.body;
     res = [];
-
-
-    for(var i=0; i< Object.keys(arr).length;i++){
+   for(var i=0; i< Object.keys(arr).length;i++){
     	var newJob = new jobModel(arr[i]);
     	newJob.save(function (err) {
 	        res.push(err);
@@ -359,30 +418,8 @@ exports.createNewJob = function(req,res){
 	        {
 	            // Done
 	        }
-    });
-}
-
-
-};
-exports.testCreateNewJob = function(req,res){
-	res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	
-	var newJob = new jobModel(req.body);
-
-	var arr = req.body;
-    res = [];
-
-	arr.forEach(function (item) {
-	    newJob.save(function (err) {
-	        res.push(err);
-	        if (res.length === arr.length)
-	        {
-	            // Done
-	        }
-	    });
-	});
-
+    	});
+	}
 };  
 exports.updateJobById = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
