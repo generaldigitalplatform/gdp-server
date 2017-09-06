@@ -2,8 +2,9 @@ var mongoose = require('mongoose'),
 	jobModel = mongoose.model('Job'),
 	customerProfileModel = mongoose.model('CustomerProfile'),
 	ObjectId = require('mongoose').Types.ObjectId;
-	var extend = require('util')._extend;
-	var moment= require('moment');
+	extend = require('util')._extend,
+	moment= require('moment'),
+	promise = require('bluebird');
 
 exports.findAllJobs = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
@@ -48,18 +49,21 @@ exports.findAllJobs = function(req,res){
 	var customer = req.param('Customer');
 	var phone = req.param('Phone');
 	var jobId = req.param('JobId');
+	var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+	
+
 	// var jobTitle = req.param('JobTitle');
 	// var jobDescription = req.param('JobDescription');
 
-	if(jobDates ===  '0' && jobId === '0' && jobStatus === '0' && fieldForce === '0' && !customer && !phone){
-		gteQuery = moment(Date()).format("YYYY-MM-DD")+startTime;
+	if(jobDates ===  '0' && !jobId && jobStatus === '0' && fieldForce === '0' && !customer && !phone){
 		lteQuery = moment(Date()).format("YYYY-MM-DD")+toTime;
+		gteQuery = moment(Date()).format("YYYY-MM-DD")+startTime;
 		query["createdAt"] = {$gte:gteQuery,$lte:lteQuery}
 	}
 	else{
 		if(jobDates.length !== 0 && jobDates === '0') {
-			gteQuery = moment(Date()).format("YYYY-MM-DD")+startTime;
 			lteQuery = moment(Date()).format("YYYY-MM-DD")+toTime;
+			gteQuery = moment(Date()).format("YYYY-MM-DD")+startTime;
 			query["createdAt"] = {$gte:gteQuery,$lte:lteQuery}
 		}
 		else if(jobDates.length !== 0 && jobDates === '1') {
@@ -68,41 +72,47 @@ exports.findAllJobs = function(req,res){
 			var yesterday = new Date(today);
 			yesterday.setDate(today.getDate()-1);
 
-			gteQuery = moment(yesterday).format("YYYY-MM-DD")+startTime;
 			lteQuery = moment(yesterday).format("YYYY-MM-DD")+toTime;
+			gteQuery = moment(yesterday).format("YYYY-MM-DD")+startTime;
 
 			query["createdAt"] = {$gte:gteQuery,$lte:lteQuery}
 		}
-		else if(jobDates.length !== 0 && jobDates === '2') {
-		
-			var today = new Date();
-			var lastweek = new Date(today);
-			lastweek.setDate(today.getDate()-7);
+		else if(jobDates.length !== 0 && jobDates === '2') {	
 
-			lteQuery = moment(today).format("YYYY-MM-DD")+startTime;
-			gteQuery = moment(lastweek).format("YYYY-MM-DD")+toTime;
-
+			gteQuery = moment().startOf('isoweek').format("YYYY-MM-DD")+startTime;
+			lteQuery =  moment().endOf('isoweek').format("YYYY-MM-DD")+toTime;
 			query["createdAt"] = {$gte:gteQuery,$lte:lteQuery}
 		}
-		else if(jobDates.length !== 0 && jobDates === '3') {
-		
-			var today = new Date();
-			var lastweek = new Date(today);
-			lastweek.setDate(today.getDate()-30);
+		else if(jobDates.length !== 0 && jobDates === '3') {	
 
-			lteQuery = moment(today).format("YYYY-MM-DD")+startTime;
-			gteQuery = moment(lastweek).format("YYYY-MM-DD")+toTime;
-
+			gteQuery = moment().subtract(1, 'weeks').startOf('isoweek').format("YYYY-MM-DD")+startTime;
+			lteQuery =  moment().subtract(1, 'weeks').startOf('isoweek').format("YYYY-MM-DD")+toTime;
 			query["createdAt"] = {$gte:gteQuery,$lte:lteQuery}
 		}
 		else if(jobDates.length !== 0 && jobDates === '4') {
 		
-			var today = new Date();
-			var lastweek = new Date(today);
-			lastweek.setDate(today.getDate()-365);
+			var startOfMonth = moment().startOf('month').format("YYYY-MM-DD")+startTime;
+            var endOfMonth   = moment().endOf('month').format("YYYY-MM-DD")+toTime;         
 
-			lteQuery = moment(today).format("YYYY-MM-DD")+startTime;
-			gteQuery = moment(lastweek).format("YYYY-MM-DD")+toTime;
+			lteQuery = moment().endOf('month').format("YYYY-MM-DD")+toTime;
+			gteQuery = moment().startOf('month').format("YYYY-MM-DD")+startTime;
+
+			query["createdAt"] = {$gte:gteQuery,$lte:lteQuery}
+		}
+		else if(jobDates.length !== 0 && jobDates === '5') {
+
+			lteQuery = moment().subtract(1, 'months').startOf('month').format("YYYY-MM-DD")+toTime;
+			gteQuery = moment().subtract(1, 'months').startOf('month').format("YYYY-MM-DD")+startTime;
+
+			query["createdAt"] = {$gte:gteQuery,$lte:lteQuery}
+		}
+		else if(jobDates.length !== 0 && jobDates === '6') {
+
+		  var startOfYear = moment().startOf('year').format("YYYY-MM-DD")+startTime;
+          var endOfYear   = moment().endOf('year').format("YYYY-MM-DD")+toTime;           
+
+		  lteQuery = moment().endOf('year').format("YYYY-MM-DD")+toTime;
+		  gteQuery = moment().startOf('year').format("YYYY-MM-DD")+startTime;;
 
 			query["createdAt"] = {$gte:gteQuery,$lte:lteQuery}
 		}
@@ -276,12 +286,12 @@ exports.findJobStatusById = function(req,res){
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	//var jobObjId = new ObjectId((req.params.Id.length < 12) ? "123456789012" : req.params.Id);
 	
-	var totalJobsCount;
-	var completedJobsCount;
-	var rescheduledJobsCount;
-	var pendingJobsCount;
-	var cancelledJobsCount;
-	var allocatedJobsCount;
+	var totalJobsCount = 0;
+	var completedJobsCount = 0;
+	var rescheduledJobsCount = 0;
+	var pendingJobsCount = 0;
+	var cancelledJobsCount = 0;
+	var allocatedJobsCount = 0;
 	var lteQuery;
 	var gteQuery;
 	//var todayQuery = {"createdAt" : new ISODate(req.Today)};
@@ -296,84 +306,160 @@ exports.findJobStatusById = function(req,res){
 	// "JobStatus":4 // completed
 	// "JobStatus":3 // pending   
  //    "JobStatus":6 // rescheduled
- //    "JobStatus":2 // Assigned
+ //    "JobStatus":5 // cancelled
     if(req.body.hasOwnProperty('employeeid')){
-		jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":4,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
-		if (err) return res.send(err);	
-		completedJobsCount = count;
+    	// var funstarttime = new Date();
+    	var jobStatusCount = [jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":3,"createdAt":{$gte:gteQuery,$lte:lteQuery}})),
+ 							  jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":4,"createdAt":{$gte:gteQuery,$lte:lteQuery}})),
+ 							  jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":5,"createdAt":{$gte:gteQuery,$lte:lteQuery}})),
+ 							  jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":6,"createdAt":{$gte:gteQuery,$lte:lteQuery}})),
+ 					          jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"createdAt":{$gte:gteQuery,$lte:lteQuery}}))
+ 					          ];
 
-			jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":3,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
-				if (err) return res.send(err);			
-				pendingJobsCount = count;			
-
-				// jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":2,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
-				// 	if (err) return res.send(err);			
-				// 	pendingJobsCount += count;
-
-				jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":6,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
-					if (err) return res.send(err);			
-					rescheduledJobsCount = count;
-
-					jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":5,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
-					if (err) return res.send(err);			
-					cancelledJobsCount = count;
-				
-						jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
-							if (err) return res.send(err);				
-							totalJobsCount = count;
-						
-						 res.send({
+ 		promise.all(jobStatusCount)
+ 			   .then(function(result){
+ 			   	 for(var key in result){
+ 			   	 	if( key === "0") pendingJobsCount = result[key];
+ 			   	 	if( key === "1") completedJobsCount = result[key];
+ 			   	 	if( key === "2") cancelledJobsCount = result[key];
+ 			   	 	if( key === "3") rescheduledJobsCount = result[key];
+ 			   	 	if( key === "4") totalJobsCount = result[key];	
+ 			   	 }
+ 			   })
+ 			   .catch(function(err){
+ 			   	console.log(err);
+ 			   })
+ 			   .finally(function(){
+ 			   //	var funendtime = new Date() - funstarttime;
+ 			   	res.send({ 		//	   					"starttime":funstarttime,
 								"totalJobs":totalJobsCount,
 								"completedJobs":completedJobsCount,
 								"pendingJobs":pendingJobsCount,
 								"rescheduledJobs":rescheduledJobsCount,
 								"cancelledJobs":cancelledJobsCount
+								//,"endtimeInMilliSecs":funendtime
 								});
-							});
-						});
-					});
-				//});
-			});
-		});
+ 			   })
+
+		// jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":4,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+		// if (err) return res.send(err);	
+		// completedJobsCount = count;
+
+		// 	jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":3,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+		// 		if (err) return res.send(err);			
+		// 		pendingJobsCount = count;			
+
+		// 		// jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":2,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+		// 		// 	if (err) return res.send(err);			
+		// 		// 	pendingJobsCount += count;
+
+		// 		jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":6,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+		// 			if (err) return res.send(err);			
+		// 			rescheduledJobsCount = count;
+
+		// 			jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":5,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+		// 			if (err) return res.send(err);			
+		// 			cancelledJobsCount = count;
+				
+		// 				jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+		// 					if (err) return res.send(err);				
+		// 					totalJobsCount = count;
+						
+		// 				 res.send({
+		// 						"totalJobs":totalJobsCount,
+		// 						"completedJobs":completedJobsCount,
+		// 						"pendingJobs":pendingJobsCount,
+		// 						"rescheduledJobs":rescheduledJobsCount,
+		// 						"cancelledJobs":cancelledJobsCount
+		// 						});
+		// 					});
+		// 				});
+		// 			});
+		// 		//});
+		// 	});
+		// });
 	}	
  	else {
-		jobModel.count(({"JobStatus":4,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
-		if (err) return res.send(err);	
-		completedJobsCount = count;
+ 		// var funstarttime = new Date();
+ 		var jobStatusCount = [jobModel.count(({"JobStatus":3,"createdAt":{$gte:gteQuery,$lte:lteQuery}})),
+ 							  jobModel.count(({"JobStatus":4,"createdAt":{$gte:gteQuery,$lte:lteQuery}})),
+ 							  jobModel.count(({"JobStatus":5,"createdAt":{$gte:gteQuery,$lte:lteQuery}})),
+ 							  jobModel.count(({"JobStatus":6,"createdAt":{$gte:gteQuery,$lte:lteQuery}})),
+ 					          jobModel.count(({"createdAt":{$gte:gteQuery,$lte:lteQuery}}))
+ 					          ];
 
-			jobModel.count(({"JobStatus":3,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
-				if (err) return res.send(err);			
-				pendingJobsCount = count;			
-
-				// jobModel.count(({"JobStatus":2,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
-				// 	if (err) return res.send(err);			
-				// 	pendingJobsCount += count;
-
-				jobModel.count(({"JobStatus":6,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
-					if (err) return res.send(err);			
-					rescheduledJobsCount = count;
-
-					jobModel.count(({"JobStatus":5,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
-					if (err) return res.send(err);			
-					cancelledJobsCount = count;
-				
-						jobModel.count(({"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
-							if (err) return res.send(err);				
-							totalJobsCount = count;
-						
-						 res.send({
+ 		promise.all(jobStatusCount)
+ 			   .then(function(result){
+ 			   	 for(var key in result){
+ 			   	 	if( key === "0") pendingJobsCount = result[key];
+ 			   	 	if( key === "1") completedJobsCount = result[key];
+ 			   	 	if( key === "2") cancelledJobsCount = result[key];
+ 			   	 	if( key === "3") rescheduledJobsCount = result[key];
+ 			   	 	if( key === "4") totalJobsCount = result[key];	
+ 			   	 }
+ 			   	 // for(var i = 0; i < result.count; i++){ 
+ 			   	 // 	if( i === 0) pendingJobsCount = result[i];
+ 			   	 // 	if( i === 1) completedJobsCount = result[i];
+ 			   	 // 	if( i === 2) cancelledJobsCount = result[i];
+ 			   	 // 	if( i === 3) rescheduledJobsCount = result[i];
+ 			   	 // 	if( i === 4) totalJobsCount = result[i];	
+ 			   	 // }
+ 			   })
+ 			   .catch(function(err){
+ 			   	console.log(err);
+ 			   })
+ 			   .finally(function(){
+ 			   	//var funendtime = new Date() - funstarttime;
+ 			   	res.send({
+ 			   					//"starttime":funstarttime,
 								"totalJobs":totalJobsCount,
 								"completedJobs":completedJobsCount,
 								"pendingJobs":pendingJobsCount,
 								"rescheduledJobs":rescheduledJobsCount,
 								"cancelledJobs":cancelledJobsCount
+								//"endtimeInMilliSecs":funendtime
 								});
-							});
-						});
-					});
-				//});
-			});
-		});
+
+ 			   })
+		// jobModel.count(({"JobStatus":4,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+		// if (err) return res.send(err);	
+		// completedJobsCount = count;
+
+		// 	jobModel.count(({"JobStatus":3,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+		// 		if (err) return res.send(err);			
+		// 		pendingJobsCount = count;			
+
+		// 		// jobModel.count(({"JobStatus":2,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+		// 		// 	if (err) return res.send(err);			
+		// 		// 	pendingJobsCount += count;
+
+		// 		jobModel.count(({"JobStatus":6,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+		// 			if (err) return res.send(err);			
+		// 			rescheduledJobsCount = count;
+
+		// 			jobModel.count(({"JobStatus":5,"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+		// 			if (err) return res.send(err);			
+		// 			cancelledJobsCount = count;
+				
+		// 				jobModel.count(({"createdAt":{$gte:gteQuery,$lte:lteQuery}}),function(err,count){
+		// 					if (err) return res.send(err);				
+		// 					totalJobsCount = count;
+		// 					var funendtime = new Date() - funstarttime;
+		// 				 res.send({
+		// 				 	"starttime":funstarttime,
+		// 						"totalJobs":totalJobsCount,
+		// 						"completedJobs":completedJobsCount,
+		// 						"pendingJobs":pendingJobsCount,
+		// 						"rescheduledJobs":rescheduledJobsCount,
+		// 						"cancelledJobs":cancelledJobsCount,
+		// 						"endtimeInMilliSecs":funendtime
+		// 						});
+		// 					});
+		// 				});
+		// 			});
+		// 		//});
+		// 	});
+		// });
 	}
    
 };
@@ -386,22 +472,6 @@ exports.createNewJob = function(req,res){
 	return res.send(err);
 		res.json(profile);
 	});
-
-	// var arr = req.body;
- //    res = [];
-
-
- //    for(var i=0; i< Object.keys(arr).length;i++){
- //    	var newJob = new jobModel(arr[i]);
- //    	newJob.save(function (err) {
-	//         res.push(err);
-	//         if (res.length === Object.keys(arr).length)
-	//         {
-	//             // Done
-	//         }
- //    });
-//}
-
 
 };
 exports.createNewJobs = function(req,res){
