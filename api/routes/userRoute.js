@@ -8,6 +8,8 @@ module.exports = function(app){
 
   router.use('/',userRoute);
   userRoute.get('/user',userController.findAllFieldForce);
+  userRoute.put('/user/:Id',userController.updateUserById);
+  userRoute.delete('/user/:Id',userController.deleteUserById);
 
   app.use('/api',router);
 }
