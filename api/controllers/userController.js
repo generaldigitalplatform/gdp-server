@@ -20,13 +20,33 @@ exports.updateUserById = function(req,res){
 
     query = {"employeeid":req.params.Id};
     
-    User.findOneAndUpdate(query,{$set:updateData},options,function(err,profile){
+    User.findOne(query,function(err,user){
         if (err) return res.send(err);;
-        if(profile)
-        {
-            res.json(profile);
+        if(user)
+        {    
+            user.employeeid= req.body.employeeid;
+            user.firstname= req.body.firstname;
+            user.lastname= req.body.lastname;
+            user.primaryphone= req.body.primaryphone;
+            user.secondaryphone= req.body.secondaryphone;
+            user.email= req.body.email;
+            user.password= req.body.password;
+            user.role= req.body.role;
+  
+            user.save(function(error){
+        		if(error === null){
+				    User.findOne(query,function(err,profile){
+				        if (err) return res.send(err);;
+				        if(profile)
+				        {
+				            res.json(profile);
+				        }
+				    });
+        		}
+        	});
         }
     });
+
 };
 exports.deleteUserById = function(req,res){
     res.header("Access-Control-Allow-Origin", "*");
