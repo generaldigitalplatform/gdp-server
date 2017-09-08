@@ -530,11 +530,31 @@ exports.editJobById = function(req,res){
 	else{
 		query = {"JobId":Number(req.params.Id)};
 	}
+
+	if(updateData.JobStatus === '6'){
+		jobModel.findOneAndUpdate(query,{$set:{"JobTitle":updateData.JobTitle,"JobDescription":updateData.JobDescription,"JobScheduledTime":updateData.JobScheduledTime,
+		"JobCreatedBy":updateData.JobCreatedBy,"StartedLocation.DateTime":"","StartedLocation.Area":"","StartedLocation.Coordinates":[],
+		"ReachedLocation.DateTime":"","ReachedLocation.Area":"","ReachedLocation.Coordinates":[],
+		"CancelledLocation.DateTime":"","CancelledLocation.Area":"","CancelledLocation.Coordinates":[],
+		"JobStatus":updateData.JobStatus,"CustomerDetails.Location":updateData.CustomerDetails.Location,"CustomerDetails.FirstName":updateData.CustomerDetails.FirstName,
+		"CustomerDetails.Address":updateData.CustomerDetails.Address,"CustomerDetails.PrimaryPhone":updateData.CustomerDetails.PrimaryPhone,
+		"EmployeeDetails.EmployeeId":updateData.EmployeeDetails.EmployeeId,"EmployeeDetails.Email":updateData.EmployeeDetails.Email,
+		"EmployeeDetails.FirstName":updateData.EmployeeDetails.FirstName,"EmployeeDetails.LastName":updateData.EmployeeDetails.LastName,
+		"EmployeeDetails.PrimaryPhone":updateData.EmployeeDetails.PrimaryPhone,"EmployeeDetails.SecondaryPhone":updateData.EmployeeDetails.SecondaryPhone}},
+		options,function(err,profile){
+		if (err) return res.send(err);
+		if(profile)
+			{
+				res.json(profile);
+			}
+		});
+
+	}else{	
 	jobModel.findOneAndUpdate(query,{$set:{"JobTitle":updateData.JobTitle,"JobDescription":updateData.JobDescription,"JobScheduledTime":updateData.JobScheduledTime,
 	"JobCreatedBy":updateData.JobCreatedBy,
 	"JobStatus":updateData.JobStatus,"CustomerDetails.Location":updateData.CustomerDetails.Location,"CustomerDetails.FirstName":updateData.CustomerDetails.FirstName,
-	"CustomerDetails.Address":updateData.CustomerDetails.Address,"CustomerDetails.PrimaryPhone":updateData.CustomerDetails.PrimaryPhone
-	,"EmployeeDetails.EmployeeId":updateData.EmployeeDetails.EmployeeId,"EmployeeDetails.Email":updateData.EmployeeDetails.Email,
+	"CustomerDetails.Address":updateData.CustomerDetails.Address,"CustomerDetails.PrimaryPhone":updateData.CustomerDetails.PrimaryPhone,
+	"EmployeeDetails.EmployeeId":updateData.EmployeeDetails.EmployeeId,"EmployeeDetails.Email":updateData.EmployeeDetails.Email,
 	"EmployeeDetails.FirstName":updateData.EmployeeDetails.FirstName,"EmployeeDetails.LastName":updateData.EmployeeDetails.LastName,
 	"EmployeeDetails.PrimaryPhone":updateData.EmployeeDetails.PrimaryPhone,"EmployeeDetails.SecondaryPhone":updateData.EmployeeDetails.SecondaryPhone}},
 	options,function(err,profile){
@@ -543,7 +563,8 @@ exports.editJobById = function(req,res){
 		{
 			res.json(profile);
 		}
-	});
+	  });
+	}
 };
 // 	Model.findOneAndUpdate({ "_id": bookId }, { "$set": { "name": name, "genre": genre, "author": author, "similar": similar}}).exec(function(err, book){
 //    if(err) {
