@@ -22,7 +22,7 @@ module.exports = function(app){
     router.use('/auth', authRoutes);
  
     authRoutes.post('/employer/register', AuthenticationController.employerregister);
-    authRoutes.post('/employer/login', requireLogin, AuthenticationController.employerlogin);
+    authRoutes.post('/employer/login', requireLogin,AuthenticationController.roleAuthorization(['manager','admin']), AuthenticationController.employerlogin);
     authRoutes.put('/employer/reset', employerController.resetEmployerPassword);
  
     authRoutes.get('/protected', function(req, res){
