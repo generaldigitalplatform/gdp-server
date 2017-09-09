@@ -1,5 +1,5 @@
 var jwt = require('jsonwebtoken');  
-var User = require('../models/User');
+var Employer = require('../models/Employer');
 var authConfig = require('../config/auth');
  
 function generateToken(user){
@@ -12,9 +12,8 @@ function setUserInfo(request){
     return {
         _id: request._id,
         employerid:request.employerid,
-        employeeid:request.employeeid,
-        firstname:request.firstname,
-        lastname:request.lastname,
+        name:request.name,
+        address:request.address,
         primaryphone:request.primaryphone,
         secondaryphone:request.secondaryphone,
         email: request.email,
@@ -22,7 +21,7 @@ function setUserInfo(request){
     };
 }
  
-exports.login = function(req, res, next){
+exports.employerlogin = function(req, res, next){
  
     var userInfo = setUserInfo(req.user);
  
@@ -33,23 +32,21 @@ exports.login = function(req, res, next){
  
 }
  
-exports.register = function(req, res, next){
+exports.employerregister = function(req, res, next){
  
     var employerid=req.body.employerid;
-    var employeeid=req.body.employeeid;
-    var firstname=req.body.firstname;
-    var lastname=req.body.lastname;
+    var name=req.body.name;
+    var address=req.body.address;
     var primaryphone=req.body.primaryphone;
     var secondaryphone=req.body.secondaryphone;     
     var email = req.body.email;
     var password = req.body.password;
     var role = req.body.role;
  
-    if(!employeeid){
+    if(!employerid){
         return res.status(422).send({error: 'You must enter EmployeeID'});
     }
-
-    if(!firstname){
+    if(!name){
         return res.status(422).send({error: 'You must enter Name'});
     }
     if(!primaryphone){
@@ -60,42 +57,21 @@ exports.register = function(req, res, next){
     } 
     if(!password){
         return res.status(422).send({error: 'You must enter a Password'});
-    }
- 
-    //  var query =[   
-    //     {$match:{
-    //         $and:[
-    //     ]}}];
+    } 
 
-    // if(email){
-    //     query[0].$match.$and.push({email:email});
-    // }
-    // if(employeeid){
-    //     query[0].$match.$and.push({employeeid:employeeid});
-    // }
-   
-    // User.aggregate(query, function(err,profile){
-    //     if (err) return res.send(err);
-    //     if(profile)
-    //     {           
-    //         res.json(profile);
-    //     }
-    // });
-    query = {$or:[{"email": email},{"employeeid":employeeid}]};
+    query = {$or:[{"email": email}]};
 
-   // User.findOne({email: email,employeeid:employeeid}, function(err, existingUser){
-        User.find(query, function(err,existingUser){
+        Employer.find(query, function(err,existingUser){
         if(existingUser.length>0){
             return res.status(422).send({error: 'Existing User : EmployeeID/EmailID is already in use'});
         }
         if(err){            
             return next(err);            
         }        
-        var user = new User({
+        var employer = new Employer({
             employerid: employerid,
-            employeeid: employeeid,
-            firstname: firstname,
-            lastname: lastname,
+            name: name,
+            address: address,
             primaryphone: primaryphone,
             secondaryphone: secondaryphone,
             email: email,
@@ -103,7 +79,7 @@ exports.register = function(req, res, next){
             role: role
         });
  
-        user.save(function(err, user){
+        employer.save(function(err, user){
  
             if(err){
                 return next(err);
@@ -128,10 +104,10 @@ exports.roleAuthorization = function(roles){
  
         var user = req.user;
  
-        User.findById(user._id, function(err, foundUser){
+        Employer.findById(user._id, function(err, foundUser){
  
             if(err){
-                res.status(422).json({error: 'No user found.'});
+                res.status(422).json({error: 'No employer found.'});
                 return next(err);
             }
  

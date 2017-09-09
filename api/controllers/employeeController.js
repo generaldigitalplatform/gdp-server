@@ -1,30 +1,39 @@
 var mongoose = require('mongoose'),
-	User = mongoose.model('User');
+	Employee = mongoose.model('Employee');
 var ObjectId = require('mongoose').Types.ObjectId;
 
-exports.findAllUsers = function(req,res){
+exports.createEmployee = function(req,res){
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    var employee = new Employee(req.body);
+    employee.save(function(err, profile){
+    if(err)
+        res.send(err);
+    res.json(profile);
+    });
+}; 
+exports.findAllEmployees = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	User.find({},function(err,profile){
+	Employee.find({},function(err,profile){
 			if(err) return res.send(err);
 			res.json(profile);
 		});
 	};
 
-exports.findUserById = function(req,res){
+exports.findEmployeeById = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	   
     query = {"employerid":req.params.Id};
     
-	User.find(query,function(err,profile){
+	Employee.find(query,function(err,profile){
 			if(err) return res.send(err);
 			res.json(profile);
 		});
 	};
 
-
-exports.updateUserById = function(req,res){
+exports.updateEmployeeById = function(req,res){
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
@@ -32,9 +41,9 @@ exports.updateUserById = function(req,res){
     var options ={upsert:true,new: true};
     var query;
 
-    query = {"employeid":req.params.Id};
+    query = {"employeeid":req.params.Id};
     
-    User.findOne(query,function(err,user){
+    Employee.findOne(query,function(err,user){
         if (err) return res.send(err);;
         if(user)
         {    
@@ -62,13 +71,13 @@ exports.updateUserById = function(req,res){
     });
 
 };
-exports.deleteUserById = function(req,res){
+exports.deleteEmployeeById = function(req,res){
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     
     query = {"employeeid":req.params.Id};
 
-    User.findOneAndRemove(query,function(err,profile){
+    Employee.findOneAndRemove(query,function(err,profile){
     if(err) return res.send(err);
     if(profile)
         {

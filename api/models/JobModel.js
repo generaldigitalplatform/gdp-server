@@ -23,7 +23,8 @@ var JobSchema = new Schema({
 		EmployeeId:String,
 		Email:String,
 		PrimaryPhone:Number,
-		SecondaryPhone:Number		
+		SecondaryPhone:Number,
+		EmployerId:String		
 	},
 	CustomerDetails:{
 		FirstName:String,

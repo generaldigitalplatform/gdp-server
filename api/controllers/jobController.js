@@ -42,7 +42,7 @@ exports.findAllJobs = function(req,res){
 	// else{
 	// 	lteQuery = new Date(req.body.toDate).toISOString();
 	// }
-
+	var employerId = req.param('employerid');
 	var jobDates = req.param('JobDates');
 	var jobStatus = req.param('JobStatus');
 	var fieldForce = req.param('FieldForce');
@@ -54,7 +54,9 @@ exports.findAllJobs = function(req,res){
 
 	// var jobTitle = req.param('JobTitle');
 	// var jobDescription = req.param('JobDescription');
-
+	if(employerId.length !== 0) {
+		query["EmployeeDetails.EmployerId"] = employerId;
+	}
 	if(jobDates ===  '0' && !jobId && jobStatus === '0' && fieldForce === '0' && !customer && !phone){
 		lteQuery = moment(Date()).format("YYYY-MM-DD")+toTime;
 		gteQuery = moment(Date()).format("YYYY-MM-DD")+startTime;
@@ -294,6 +296,8 @@ exports.findJobStatusById = function(req,res){
 	var allocatedJobsCount = 0;
 	var lteQuery;
 	var gteQuery;
+	var employerid = req.param("employerid");
+	
 	//var todayQuery = {"createdAt" : new ISODate(req.Today)};
 	gteQuery = new Date(req.body.fromDate).toISOString();
 	if(req.body.fromDate == req.body.toDate){
@@ -309,11 +313,11 @@ exports.findJobStatusById = function(req,res){
  //    "JobStatus":5 // cancelled
     if(req.body.hasOwnProperty('employeeid')){
     	// var funstarttime = new Date();
-    	var jobStatusCount = [jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":3,"createdAt":{$gte:gteQuery,$lte:lteQuery}})),
- 							  jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":4,"createdAt":{$gte:gteQuery,$lte:lteQuery}})),
- 							  jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":5,"createdAt":{$gte:gteQuery,$lte:lteQuery}})),
- 							  jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":6,"createdAt":{$gte:gteQuery,$lte:lteQuery}})),
- 					          jobModel.count(({"EmployeeDetails.EmployeeId":req.body.employeeid,"createdAt":{$gte:gteQuery,$lte:lteQuery}}))
+    	var jobStatusCount = [jobModel.count(({"EmployeeDetails.EmployerId":employerid,"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":3,"createdAt":{$gte:gteQuery,$lte:lteQuery}})),
+ 							  jobModel.count(({"EmployeeDetails.EmployerId":employerid,"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":4,"createdAt":{$gte:gteQuery,$lte:lteQuery}})),
+ 							  jobModel.count(({"EmployeeDetails.EmployerId":employerid,"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":5,"createdAt":{$gte:gteQuery,$lte:lteQuery}})),
+ 							  jobModel.count(({"EmployeeDetails.EmployerId":employerid,"EmployeeDetails.EmployeeId":req.body.employeeid,"JobStatus":6,"createdAt":{$gte:gteQuery,$lte:lteQuery}})),
+ 					          jobModel.count(({"EmployeeDetails.EmployerId":employerid,"EmployeeDetails.EmployeeId":req.body.employeeid,"createdAt":{$gte:gteQuery,$lte:lteQuery}}))
  					          ];
 
  		promise.all(jobStatusCount)
@@ -381,11 +385,11 @@ exports.findJobStatusById = function(req,res){
 	}	
  	else {
  		// var funstarttime = new Date();
- 		var jobStatusCount = [jobModel.count(({"JobStatus":3,"createdAt":{$gte:gteQuery,$lte:lteQuery}})),
- 							  jobModel.count(({"JobStatus":4,"createdAt":{$gte:gteQuery,$lte:lteQuery}})),
- 							  jobModel.count(({"JobStatus":5,"createdAt":{$gte:gteQuery,$lte:lteQuery}})),
- 							  jobModel.count(({"JobStatus":6,"createdAt":{$gte:gteQuery,$lte:lteQuery}})),
- 					          jobModel.count(({"createdAt":{$gte:gteQuery,$lte:lteQuery}}))
+ 		var jobStatusCount = [jobModel.count(({"EmployeeDetails.EmployerId":employerid,"JobStatus":3,"createdAt":{$gte:gteQuery,$lte:lteQuery}})),
+ 							  jobModel.count(({"EmployeeDetails.EmployerId":employerid,"JobStatus":4,"createdAt":{$gte:gteQuery,$lte:lteQuery}})),
+ 							  jobModel.count(({"EmployeeDetails.EmployerId":employerid,"JobStatus":5,"createdAt":{$gte:gteQuery,$lte:lteQuery}})),
+ 							  jobModel.count(({"EmployeeDetails.EmployerId":employerid,"JobStatus":6,"createdAt":{$gte:gteQuery,$lte:lteQuery}})),
+ 					          jobModel.count(({"EmployeeDetails.EmployerId":employerid,"createdAt":{$gte:gteQuery,$lte:lteQuery}}))
  					          ];
 
  		promise.all(jobStatusCount)

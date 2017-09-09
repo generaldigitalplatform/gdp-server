@@ -66,22 +66,22 @@ module.exports = function(app){
     employeeProfileRoutes.delete('/profile',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), employeeProfileController.deleteAllEmployeeProfile);
 
 
-    apiRoutes.use('/employee', jobRoutes);
+    // apiRoutes.use('/employee', jobRoutes);
  
 
-    jobRoutes.get('/job',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.findAllJobs);
-    jobRoutes.post('/job',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.createNewJob);
-    jobRoutes.post('/jobs',jobController.createNewJobs);
+    // jobRoutes.get('/job',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.findAllJobs);
+    // jobRoutes.post('/job',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.createNewJob);
+    // jobRoutes.post('/jobs',jobController.createNewJobs);
 
-    jobRoutes.get('/job/:Id',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.findJobById);
-    jobRoutes.put('/job/:Id',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.updateJobById);
-    jobRoutes.put('/job/edit/:Id',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.editJobById);
-    jobRoutes.delete('/job/:Id',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.deleteJobById);
-    jobRoutes.delete('/job',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.deleteAllJobs);
+    // jobRoutes.get('/job/:Id',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.findJobById);
+    // jobRoutes.put('/job/:Id',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.updateJobById);
+    // jobRoutes.put('/job/edit/:Id',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.editJobById);
+    // jobRoutes.delete('/job/:Id',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.deleteJobById);
+    // jobRoutes.delete('/job',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.deleteAllJobs);
 
-    jobRoutes.post('/jobstatus',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.findJobStatusById);
+    // jobRoutes.post('/jobstatus',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.findJobStatusById);
 
-    jobRoutes.post('/searchjob',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.searchJobById);
+    // jobRoutes.post('/searchjob',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.searchJobById);
 
     apiRoutes.use('/employee/telesales',reportsRoutes);
     reportsRoutes.get('/reports',requireAuth, AuthenticationController.roleAuthorization(['employee','manager','admin']), jobController.searchJobById);

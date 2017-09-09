@@ -7,7 +7,8 @@ var userRoute = express.Router(),
 module.exports = function(app){
 
   router.use('/',userRoute);
-  userRoute.get('/user',userController.findAllFieldForce);
+  userRoute.get('/user',userController.findAllUsers);
+  userRoute.get('/user/:Id',userController.findUserById);
   userRoute.put('/user/:Id',userController.updateUserById);
   userRoute.delete('/user/:Id',userController.deleteUserById);
 

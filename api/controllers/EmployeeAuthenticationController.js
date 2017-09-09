@@ -1,5 +1,5 @@
 var jwt = require('jsonwebtoken');  
-var User = require('../models/User');
+var Employee = require('../models/Employee');
 var authConfig = require('../config/auth');
  
 function generateToken(user){
@@ -22,7 +22,7 @@ function setUserInfo(request){
     };
 }
  
-exports.login = function(req, res, next){
+exports.employeelogin = function(req, res, next){
  
     var userInfo = setUserInfo(req.user);
  
@@ -33,7 +33,7 @@ exports.login = function(req, res, next){
  
 }
  
-exports.register = function(req, res, next){
+exports.employeeregister = function(req, res, next){
  
     var employerid=req.body.employerid;
     var employeeid=req.body.employeeid;
@@ -84,14 +84,14 @@ exports.register = function(req, res, next){
     query = {$or:[{"email": email},{"employeeid":employeeid}]};
 
    // User.findOne({email: email,employeeid:employeeid}, function(err, existingUser){
-        User.find(query, function(err,existingUser){
+        Employee.find(query, function(err,existingUser){
         if(existingUser.length>0){
             return res.status(422).send({error: 'Existing User : EmployeeID/EmailID is already in use'});
         }
         if(err){            
             return next(err);            
         }        
-        var user = new User({
+        var user = new Employee({
             employerid: employerid,
             employeeid: employeeid,
             firstname: firstname,
@@ -128,7 +128,7 @@ exports.roleAuthorization = function(roles){
  
         var user = req.user;
  
-        User.findById(user._id, function(err, foundUser){
+        Employee.findById(user._id, function(err, foundUser){
  
             if(err){
                 res.status(422).json({error: 'No user found.'});

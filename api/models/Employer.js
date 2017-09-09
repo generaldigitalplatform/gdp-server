@@ -1,23 +1,19 @@
 var mongoose = require('mongoose');
 var bcrypt   = require('bcrypt-nodejs');
  
-var UserSchema = new mongoose.Schema({
- 
+var EmployerSchema = new mongoose.Schema({
     employerid: {
         type: String,
         required: true
     },
-    employeeid: {
+    name: {
         type: String,
         required: true
     },
-    firstname: {
+    address: {
         type: String,
         required: true
-    },
-    lastname: {
-        type: String
-    },
+    },    
     primaryphone: {
         type: Number,
         required: true
@@ -37,15 +33,15 @@ var UserSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['employee', 'admin', 'manager'],
-        default: 'employee'
+        enum: ['admin', 'manager'],
+        default: 'admin'
     }
  
-}, {strict:false},{
+},{strict:false}, {
     timestamps: true
 });
  
-UserSchema.pre('save', function(next){
+EmployerSchema.pre('save', function(next){
  
     var user = this;
     var SALT_FACTOR = 5;
@@ -75,7 +71,7 @@ UserSchema.pre('save', function(next){
  
 });
  
-UserSchema.methods.comparePassword = function(passwordAttempt, cb){
+EmployerSchema.methods.comparePassword = function(passwordAttempt, cb){
  
     bcrypt.compare(passwordAttempt, this.password, function(err, isMatch){
  
@@ -96,4 +92,4 @@ UserSchema.methods.comparePassword = function(passwordAttempt, cb){
 //     }
 // };
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('Employer', EmployerSchema);

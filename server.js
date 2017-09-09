@@ -12,10 +12,11 @@ var express 	= require('express'),
 	jobModel = require('./api/models/JobModel');
 	employeeLocationModel = require('./api/models/EmployeeLocationModel');
 	customerFeedbackModel = require('./api/models/CustomerFeedbackModel');
-	fieldForceModel = require('./api/models/fieldforceModel'),
+	// fieldForceModel = require('./api/models/fieldforceModel'),
 	deviceTokenModel = require('./api/models/DeviceTokenModel');
 	pushMessageModel = require('./api/models/PushMessageModel');
 	userModel = require('./api/models/User');
+	employeeModel = require('./api/models/Employee');
 
 
 
@@ -32,11 +33,17 @@ app.use(bodyParser.json());
 
 var customerProfileroutes = require('./api/routes/customerProfileRoute');
 var	employeeProfileroutes= require('./api/routes/EmployeeProfileRoute');
-var fieldForceRoutes = require('./api/routes/fieldforceRoutes');
+// var fieldForceRoutes = require('./api/routes/fieldforceRoutes');
 var deviceTokenRoute = require('./api/routes/DeviceTokenRoute');
 var pushMessageRoute = require('./api/routes/PushMessageRoute');
 var userRoute = require('./api/routes/userRoute');
 var googleMapsRoute = require('./api/routes/googleMaps');
+
+var employerRoute = require('./api/routes/employerRoute');
+var employeeRoute = require('./api/routes/employeeRoute');
+
+var jobRoute = require('./api/routes/jobRoute');
+
 
 
 var routers = require('./api/routes');
@@ -51,11 +58,15 @@ httpServer.listen(process.env.PORT,process.env.IP, function() {
     console.log('gdmp-server running on port ' + port + '.');
 });
 
-fieldForceRoutes(app);
+// fieldForceRoutes(app);
 deviceTokenRoute(app);
 pushMessageRoute(app);
 userRoute(app);
 googleMapsRoute(app);
+employerRoute(app);
+employeeRoute(app);
+jobRoute(app);
+
 
 routers(app);
 module.exports = app;
