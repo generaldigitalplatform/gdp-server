@@ -42,6 +42,7 @@ exports.findAllJobs = function(req,res){
 	// else{
 	// 	lteQuery = new Date(req.body.toDate).toISOString();
 	// }
+	var empId = req.param('EmpId');
 	var employerId = req.param('employerid');
 	var jobDates = req.param('JobDates');
 	var jobStatus = req.param('JobStatus');
@@ -50,19 +51,28 @@ exports.findAllJobs = function(req,res){
 	var phone = req.param('Phone');
 	var jobId = req.param('JobId');
 	var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-	
-
 	// var jobTitle = req.param('JobTitle');
 	// var jobDescription = req.param('JobDescription');
-	if(employerId.length !== 0) {
+	if(employerId && employerId.length !== 0) {
 		query["EmployeeDetails.EmployerId"] = employerId;
 	}
-	if(jobDates ===  '0' && !jobId && jobStatus === '0' && fieldForce === '0' && !customer && !phone){
+
+	if(empId && empId.length !== 0){
+
+		if(req.query.hasOwnProperty('JobStatus')){
+			if(req.query.JobStatus.match("NotCompleted") && req.query.JobStatus.match("NotCancelled")){
+				query = {$and: [{"JobStatus":{$ne: 4 }},{"JobStatus":{ $ne: 5 }}]};
+				query["EmployeeDetails.EmployeeId"] = req.params.Id;
+		   	}
+				
+		}
+	}
+	else if(jobDates ===  '0' && !jobId && jobStatus === '0' && fieldForce === '0' && !customer && !phone){
 		lteQuery = moment(Date()).format("YYYY-MM-DD")+toTime;
 		gteQuery = moment(Date()).format("YYYY-MM-DD")+startTime;
 		query["createdAt"] = {$gte:gteQuery,$lte:lteQuery}
 	}
-	else{
+	else {
 		if(jobDates.length !== 0 && jobDates === '0') {
 			lteQuery = moment(Date()).format("YYYY-MM-DD")+toTime;
 			gteQuery = moment(Date()).format("YYYY-MM-DD")+startTime;
@@ -297,7 +307,7 @@ exports.findJobStatusById = function(req,res){
 	var lteQuery;
 	var gteQuery;
 	var employerid = req.param("employerid");
-	
+
 	//var todayQuery = {"createdAt" : new ISODate(req.Today)};
 	gteQuery = new Date(req.body.fromDate).toISOString();
 	if(req.body.fromDate == req.body.toDate){

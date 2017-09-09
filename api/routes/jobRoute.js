@@ -6,9 +6,13 @@ var userRoute = express.Router(),
     userController = require('../controllers/userController'),
     jobController = require('../controllers/jobController'),
     passportService = require('../config/passport'),
-    AuthenticationController = require('../controllers/EmployerAuthenticationController');
+    //AuthenticationController = require('../controllers/EmployerAuthenticationController');
+    AuthenticationController = require('../controllers/authentication'); 
 
-var requireAuth = passport.authenticate('jwt-employer', {session: false});
+//var requireAuth = passport.authenticate('jwt-employer', {session: false});
+	var requireAuth = passport.authenticate('jwt', {session: false}),
+    requireLogin = passport.authenticate('local', {session: false});
+ 
 
 module.exports = function(app){
 
