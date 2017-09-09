@@ -32,7 +32,7 @@ exports.updateUserById = function(req,res){
     var options ={upsert:true,new: true};
     var query;
 
-    query = {"employeid":req.params.Id};
+    query = {"employeeid":req.params.Id};
     
     User.findOne(query,function(err,user){
         if (err) return res.send(err);;

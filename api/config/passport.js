@@ -71,114 +71,11 @@ var localOptions = {
     }
   ));
 
- 
-    var locallogin = new LocalStrategy(localOptions, function(email, password, done){ 
-    User.findOne({
-        email: email
-    }, function(err, user){
- 
-        if(err){
-            return done(err);
-        }
- 
-        if(!user){
-                        Employer.findOne({
-                        email: email
-                    }, function(err, user){
-                 
-                        if(err){
-                            return done(err);
-                        }
-                 
-                        if(!user){
-                            return done(null, false, {error: 'Login failed. Please try again with right EmailID'});
-                        }
-                 
-                        user.comparePassword(password, function(err, isMatch){
-                 
-                            if(err){
-                                return done(err);
-                            } 
-                            if(!isMatch){
-                                return done(null, false, {error: 'Login failed. Please try again with right Password'});
-                            } 
-                            return done(null, user);
-                 
-                        });
-                 
-                    });
-
-            //return done(null, false, {error: 'Login failed. Please try again with right EmailID'});
-        }
- 
-        else{user.comparePassword(password, function(err, isMatch){
- 
-            if(err){
-                return done(err);
-            } 
-            if(!isMatch){
-                return done(null, false, {error: 'Login failed. Please try again with right Password'});
-            } 
-            return done(null, user);
- 
-        });
-    };
- 
-    });
- 
-});
-
-//  var localloginemployer = new LocalStrategy(localOptions, function(email, password, done){ 
-//     Employer.findOne({
-//         email: email
-//     }, function(err, user){
- 
-//         if(err){
-//             return done(err);
-//         }
- 
-//         if(!user){
-//             return done(null, false, {error: 'Login failed. Please try again with right EmailID'});
-//         }
- 
-//         user.comparePassword(password, function(err, isMatch){
- 
-//             if(err){
-//                 return done(err);
-//             } 
-//             if(!isMatch){
-//                 return done(null, false, {error: 'Login failed. Please try again with right Password'});
-//             } 
-//             return done(null, user);
- 
-//         });
- 
-//     });
- 
-// });
-
-
 var jwtOptions = {
     jwtFromRequest: ExtractJwt.fromAuthHeader(),
     secretOrKey: config.secret
 };
- 
-passport.use('jwt', new JwtStrategy(jwtOptions, function(payload, done){
-    User.findById(payload._id, function(err, user){
- 
-        if(err){
-            return done(err, false);
-        }
- 
-        if(user){
-            done(null, user);
-        } else {
-            done(null, false);
-        }
- 
-    });
- 
-}));
+
 
 passport.use('jwt-employer', new JwtStrategy(jwtOptions, function(payload, done){
     Employer.findById(payload._id, function(err, user){
@@ -197,10 +94,37 @@ passport.use('jwt-employer', new JwtStrategy(jwtOptions, function(payload, done)
  
 }));
 
-var jwtOptions = {
-    jwtFromRequest: ExtractJwt.fromAuthHeader(),
-    secretOrKey: config.secret
-};
+var localLogin = new LocalStrategy(localOptions, function(email, password, done){
+ 
+    User.findOne({
+        email: email
+    }, function(err, user){
+ 
+        if(err){
+            return done(err);
+        }
+ 
+        if(!user){
+            return done(null, false, {error: 'Login failed. Please try again with right EmailID'});
+        }
+ 
+        user.comparePassword(password, function(err, isMatch){
+ 
+            if(err){
+                return done(err);
+            } 
+            if(!isMatch){
+                return done(null, false, {error: 'Login failed. Please try again with right Password'});
+            } 
+            return done(null, user);
+ 
+        });
+ 
+    });
+ 
+});
+ 
+
  
 var jwtLogin = new JwtStrategy(jwtOptions, function(payload, done){
  
@@ -221,6 +145,4 @@ var jwtLogin = new JwtStrategy(jwtOptions, function(payload, done){
 });
  
 passport.use(jwtLogin);
-  // passport.use(locallogin);
-  // passport.use(jwtloginemployer);
-  // passport.use(localloginemployer);
+passport.use(localLogin);
