@@ -28,6 +28,7 @@ module.exports = function(app){
 
     employeeRoutes.get('/find/:Id',employeeController.findEmployeeById);
     employeeRoutes.put('/update/:Id',employeeController.updateEmployeeById);
+    employeeRoutes.put('/reset',employeeController.resetEmployeePassword);
     employeeRoutes.delete('/delete/:Id',employeeController.deleteEmployeeById);
 
     app.use('/api', router);
