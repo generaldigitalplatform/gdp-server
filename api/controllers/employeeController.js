@@ -1,11 +1,11 @@
 var mongoose = require('mongoose'),
-	User = mongoose.model('User');
+	Employee = mongoose.model('Employee');
 var ObjectId = require('mongoose').Types.ObjectId;
 
 exports.createEmployee = function(req,res){
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    var user = new User(req.body);
+    var user = new Employee(req.body);
     user.save(function(err, profile){
     if(err)
         res.send(err);
@@ -15,7 +15,7 @@ exports.createEmployee = function(req,res){
 exports.findAllEmployees = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	User.find({},function(err,profile){
+	Employee.find({},function(err,profile){
 			if(err) return res.send(err);
 			res.json(profile);
 		});
@@ -27,7 +27,7 @@ exports.findEmployeeById = function(req,res){
 	   
     query = {"employerid":req.params.Id};
     
-	User.find(query,function(err,profile){
+	Employee.find(query,function(err,profile){
 			if(err) return res.send(err);
 			res.json(profile);
 		});
@@ -42,7 +42,7 @@ exports.resetEmployeePassword = function(req,res){
 
     query = {"email":req.body.email};
     
-    User.findOne(query,function(err,user){
+    Employee.findOne(query,function(err,user){
         if (err) return res.send(err);;
         if(user)
         {    
@@ -57,7 +57,7 @@ exports.resetEmployeePassword = function(req,res){
   
             user.save(function(error){
                 if(error === null){
-                    User.findOne(query,function(err,profile){
+                    Employee.findOne(query,function(err,profile){
                         if (err) return res.send(err);;
                         if(profile)
                         {
@@ -80,10 +80,11 @@ exports.updateEmployeeById = function(req,res){
 
     query = {"employeeid":req.params.Id};
     
-    User.findOne(query,function(err,user){
+    Employee.findOne(query,function(err,user){
         if (err) return res.send(err);;
         if(user)
         {    
+            user.employerid= req.body.employerid;
             user.employeeid= req.body.employeeid;
             user.firstname= req.body.firstname;
             user.lastname= req.body.lastname;
@@ -95,7 +96,7 @@ exports.updateEmployeeById = function(req,res){
   
             user.save(function(error){
         		if(error === null){
-				    User.findOne(query,function(err,profile){
+				    Employee.findOne(query,function(err,profile){
 				        if (err) return res.send(err);;
 				        if(profile)
 				        {
@@ -114,7 +115,7 @@ exports.deleteEmployeeById = function(req,res){
     
     query = {"employeeid":req.params.Id};
 
-    User.findOneAndRemove(query,function(err,profile){
+    Employee.findOneAndRemove(query,function(err,profile){
     if(err) return res.send(err);
     if(profile)
         {

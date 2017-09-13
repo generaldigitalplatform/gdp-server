@@ -1,7 +1,8 @@
 var mongoose 		 = require('mongoose'),
  	admin 			 = require('firebase-admin'),
  	serviceAccount 	 = require('../config/gdsplatform-377133539fc8.json')
-	pushMessageModel = mongoose.model('FCM'),
+	//pushMessageModel = mongoose.model('FCM'),
+	pushMessageModel = require('../models/PushMessageModel');
 
 	admin.initializeApp({
 	  credential: admin.credential.cert(serviceAccount),

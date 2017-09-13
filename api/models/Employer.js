@@ -2,6 +2,10 @@ var mongoose = require('mongoose');
 var bcrypt   = require('bcrypt-nodejs');
  
 var EmployerSchema = new mongoose.Schema({
+    productownerid: {
+        type: String,
+        required: true
+    },
     employerid: {
         type: String,
         required: true

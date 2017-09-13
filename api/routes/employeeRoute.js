@@ -1,11 +1,11 @@
-var AuthenticationController = require('../controllers/EmployeeAuthenticationController'), 
+var AuthenticationController = require('../controllers/authentication'); 
     express = require('express'),
     passportService = require('../config/passport'),
     passport = require('passport'),
     employeeController =require('../controllers/employeeController');
  
-var requireAuth = passport.authenticate('jwt-employee', {session: false});
-var requireLogin = passport.authenticate('local-employee', {session: false});
+ var requireAuth = passport.authenticate('jwt', {session: false}),
+    requireLogin = passport.authenticate('local', {session: false});
  
 module.exports = function(app){
  
@@ -24,12 +24,13 @@ module.exports = function(app){
         res.send({ content: 'Success'});
     });
 
-    router.use('/employee', employeeRoutes);
+    // router.use('/employee', employeeRoutes);
 
-    employeeRoutes.get('/find/:Id',employeeController.findEmployeeById);
-    employeeRoutes.put('/update/:Id',employeeController.updateEmployeeById);
-    employeeRoutes.put('/reset',employeeController.resetEmployeePassword);
-    employeeRoutes.delete('/delete/:Id',employeeController.deleteEmployeeById);
+    authRoutes.get('/employee',employeeController.findAllEmployees);
+    authRoutes.get('/employee/:Id',employeeController.findEmployeeById);
+    authRoutes.put('/employee/:Id',employeeController.updateEmployeeById);
+    authRoutes.put('/employee/reset',employeeController.resetEmployeePassword);
+    authRoutes.delete('/employee/:Id',employeeController.deleteEmployeeById);
 
     app.use('/api', router);
 

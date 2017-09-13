@@ -16,7 +16,7 @@ module.exports = function(app){
  
     var router = express.Router(),
         authRoutes = express.Router(),
-        jobRoutes = express.Router();
+        empRoutes = express.Router();
 
     // Auth Routes
     router.use('/auth', authRoutes);
@@ -28,6 +28,11 @@ module.exports = function(app){
     authRoutes.get('/protected', function(req, res){
         res.send({ content: 'Success'});
     });
+
+    authRoutes.get('/employer', employerController.findAllEmployers);
+    authRoutes.get('/employer/:Id',employerController.findEmployerById);
+    authRoutes.put('/employer/:Id',employerController.updateEmployerById);
+    authRoutes.delete('/employer/:Id',employerController.deleteEmployerById);
 
     app.use('/api', router);
 

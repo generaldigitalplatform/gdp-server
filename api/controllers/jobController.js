@@ -1,6 +1,7 @@
 var mongoose = require('mongoose'),
-	jobModel = mongoose.model('Job'),
-	customerProfileModel = mongoose.model('CustomerProfile'),
+	//jobModel = mongoose.model('Job'),
+	jobModel = require('../models/JobModel'),
+	//customerProfileModel = mongoose.model('CustomerProfile'),
 	ObjectId = require('mongoose').Types.ObjectId;
 	extend = require('util')._extend,
 	moment= require('moment'),
@@ -68,14 +69,14 @@ exports.findAllJobs = function(req,res){
 		}
 	}
 	else if(jobDates ===  '0' && !jobId && jobStatus === '0' && fieldForce === '0' && !customer && !phone){
-		lteQuery = moment(Date()).format("YYYY-MM-DD")+toTime;
-		gteQuery = moment(Date()).format("YYYY-MM-DD")+startTime;
+		lteQuery = moment(new Date()).format("YYYY-MM-DD")+toTime;
+		gteQuery = moment(new Date()).format("YYYY-MM-DD")+startTime;
 		query["createdAt"] = {$gte:gteQuery,$lte:lteQuery}
 	}
 	else {
 		if(jobDates.length !== 0 && jobDates === '0') {
-			lteQuery = moment(Date()).format("YYYY-MM-DD")+toTime;
-			gteQuery = moment(Date()).format("YYYY-MM-DD")+startTime;
+			lteQuery = moment(new Date()).format("YYYY-MM-DD")+toTime;
+			gteQuery = moment(new Date()).format("YYYY-MM-DD")+startTime;
 			query["createdAt"] = {$gte:gteQuery,$lte:lteQuery}
 		}
 		else if(jobDates.length !== 0 && jobDates === '1') {
