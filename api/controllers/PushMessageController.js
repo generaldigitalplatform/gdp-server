@@ -58,10 +58,10 @@ exports.pushMessageToDevice = function(req,res){
 	// See the "Defining the message payload" section below for details
 	// on how to define a message payload.
 	var payload = {
-	  notification: {
-	    title: req.body.notification.title,
-	    body: req.body.notification.body
-	  },
+	  // notification: {
+	  //   title: req.body.notification.title,
+	  //   body: req.body.notification.body
+	  // },
 	  data: {
 	    message:req.body.message
 	  }
