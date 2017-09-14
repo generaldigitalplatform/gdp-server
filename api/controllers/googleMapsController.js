@@ -9,7 +9,7 @@ exports.findGeoLocation = function(req,res){
 	var action = req.body.action;
 	var startdatetime = req.body.startdatetime;
 	var reachdatetime = req.body.reachdatetime;
-	var canceldatetime = req.body.canceldatetime; //
+	var canceldatetime = req.body.canceldatetime; 
 
 	var objectId = req.body.objectId;
 	var actionData;
@@ -17,7 +17,7 @@ exports.findGeoLocation = function(req,res){
 	var putStartJob = {};
 
 	var options = {     
-        uri:'http://maps.googleapis.com/maps/api/geocode/json?latlng='+lat + ',' + lng,
+        uri:db.googlemapsapi + lat + ',' + lng,
         method: 'POST',
         json:true    
     };

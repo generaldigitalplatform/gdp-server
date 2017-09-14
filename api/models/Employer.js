@@ -39,7 +39,9 @@ var EmployerSchema = new mongoose.Schema({
         type: String,
         enum: ['admin', 'manager'],
         default: 'admin'
-    }
+    },
+    resetPasswordToken:String,
+    resetPasswordExpires:Date
  
 },{strict:false}, {
     timestamps: true

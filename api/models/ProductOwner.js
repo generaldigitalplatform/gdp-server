@@ -35,7 +35,9 @@ var ProductOwnerSchema = new mongoose.Schema({
         type: String,
         enum: ['ProductOwner'],
         default: 'productowner'
-    }
+    },    
+    resetPasswordToken:String,
+    resetPasswordExpires:Date
  
 },{strict:false}, {
     timestamps: true

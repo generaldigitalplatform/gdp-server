@@ -1,12 +1,11 @@
 var mongoose 		 = require('mongoose'),
  	admin 			 = require('firebase-admin'),
- 	serviceAccount 	 = require('../config/gdsplatform-377133539fc8.json')
-	//pushMessageModel = mongoose.model('FCM'),
+ 	serviceAccount 	 = require('../config/gdsfieldforce-firebase-adminsdk-m5ezh-beffa09b38')
 	pushMessageModel = require('../models/PushMessageModel');
 
 	admin.initializeApp({
 	  credential: admin.credential.cert(serviceAccount),
-	  databaseURL: "https://gdsplatform.firebaseio.com/"
+	  databaseURL: "https://gdsfieldforce.firebaseio.com/"
 	});
 
 //var serverkey = 'AAAAUGGsxGs:APA91bF1qVPPcbsSvYAbtcJzslTVFUEk3hpZOJWwbR_Rc8MBDZXpH8Bxf4Rn-SWXX4TxpMGF-3YWHDNC97i-wIxC4qPDq_htpsNr-eKTjOMKf7jftuKQD_nTOc_ZVIxNg7KscviAZUj8';  
@@ -54,7 +53,8 @@ exports.pushMessageToDevice = function(req,res){
 	
 	// This registration token comes from the client FCM SDKs.
 	var registrationToken = response.FCMregistrationToken; //"bk3RNwTe3H0:CI2k_HHwgIpoDKCIZvvDMExUdFQ3P1...";
-
+	// var mesg= req.body.message.split(',');
+	// mess = mesg[0] + ","  + mesg[1];
 	// See the "Defining the message payload" section below for details
 	// on how to define a message payload.
 	var payload = {
@@ -70,6 +70,7 @@ exports.pushMessageToDevice = function(req,res){
 	// registration token.
 	admin.messaging().sendToDevice(registrationToken, payload)
 		.then(function(response) {
+			res.json(response);
 			console.log("Successfully sent message:", response);
 		})
 		.catch(function(error) {
