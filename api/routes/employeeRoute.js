@@ -19,7 +19,7 @@ module.exports = function(app){
  
     authRoutes.post('/employee/register', AuthenticationController.employeeregister);
     authRoutes.post('/employee/login', requireLogin, AuthenticationController.employeelogin);
- 
+    authRoutes.put('/employee/reset',employeeController.resetEmployeePassword);
     authRoutes.get('/protected', requireAuth, function(req, res){
         res.send({ content: 'Success'});
     });
@@ -29,7 +29,6 @@ module.exports = function(app){
     authRoutes.get('/employee',employeeController.findAllEmployees);
     authRoutes.get('/employee/:Id',employeeController.findEmployeeById);
     authRoutes.put('/employee/:Id',employeeController.updateEmployeeById);
-    authRoutes.put('/employee/reset',employeeController.resetEmployeePassword);
     authRoutes.delete('/employee/:Id',employeeController.deleteEmployeeById);
 
     app.use('/api', router);
