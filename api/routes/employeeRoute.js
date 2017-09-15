@@ -24,12 +24,10 @@ module.exports = function(app){
         res.send({ content: 'Success'});
     });
 
-    // router.use('/employee', employeeRoutes);
-
     authRoutes.get('/employee',employeeController.findAllEmployees);
-    authRoutes.get('/employee/:Id',employeeController.findEmployeeById);
-    authRoutes.put('/employee/:Id',employeeController.updateEmployeeById);
-    authRoutes.delete('/employee/:Id',employeeController.deleteEmployeeById);
+    authRoutes.get('/employee/find/:Id',employeeController.findEmployeeById);
+    authRoutes.put('/employee/update/:Id',employeeController.updateEmployeeById);
+    authRoutes.delete('/employee/delete/:Id',employeeController.deleteEmployeeById);
 
     app.use('/api', router);
 

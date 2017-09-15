@@ -31,7 +31,7 @@ module.exports = function(app){
 
     authRoutes.get('/employer', employerController.findAllEmployers);
     authRoutes.get('/employer/:Id',employerController.findEmployerById);
-    authRoutes.put('/employer/:Id',employerController.updateEmployerById);
+    authRoutes.put('/employer/update/:Id',employerController.updateEmployerById);
     authRoutes.delete('/employer/:Id',employerController.deleteEmployerById);
 
     app.use('/api', router);
