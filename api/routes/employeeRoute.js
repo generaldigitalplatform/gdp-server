@@ -25,9 +25,9 @@ module.exports = function(app){
     });
 
     authRoutes.get('/employee',employeeController.findAllEmployees);
-    authRoutes.get('/employee/find/:Id',employeeController.findEmployeeById);
+    authRoutes.get('/employee/:Id',employeeController.findEmployeeById);
     authRoutes.put('/employee/update/:Id',employeeController.updateEmployeeById);
-    authRoutes.delete('/employee/delete/:Id',employeeController.deleteEmployeeById);
+    authRoutes.delete('/employee/:Id',employeeController.deleteEmployeeById);
 
     app.use('/api', router);
 
