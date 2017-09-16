@@ -91,7 +91,7 @@ exports.updateEmployeeById = function(req,res){
             user.primaryphone= req.body.primaryphone;
             user.secondaryphone= req.body.secondaryphone;
             user.email= req.body.email;
-            user.password= req.body.password;
+            if(req.body.password!=="**********") user.password= req.body.password;
             user.role= req.body.role;
   
             user.save(function(error){
