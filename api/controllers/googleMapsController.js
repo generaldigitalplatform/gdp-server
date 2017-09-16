@@ -27,7 +27,7 @@ exports.findGeoLocation = function(req,res){
 
 	var geocoder = NodeGeocoder(payload);
 
-	geocoder.reverse({lat:45.767, lon:4.833}, function(err, response) {
+	geocoder.reverse({lat:lat, lon:lng}, function(err, response) {
 	// });
 
 
