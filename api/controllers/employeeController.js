@@ -95,16 +95,21 @@ exports.updateEmployeeById = function(req,res){
             user.role= req.body.role;
   
             user.save(function(error){
-        		if(error === null){
-				    Employee.findOne(query,function(err,profile){
-				        if (err) return res.send(err);;
-				        if(profile)
-				        {
-				            res.json(profile);
-				        }
-				    });
-        		}
+    		if(error === null){
+			    Employee.findOne(query,function(err,profile){
+			        if (err) return res.send(err);;
+			        if(profile)
+			        {
+			            res.json(profile);
+			        }
+			    });
+    		}
+            if(error){
+
+                res.json(error);
+            }
         	});
+
         }
     });
 
