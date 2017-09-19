@@ -75,8 +75,8 @@ exports.findAllJobs = function(req,res){
 	}
 	else {
 		if(jobDates.length !== 0 && jobDates === '0') {
-			lteQuery = moment(new Date()).format("YYYY-MM-DD")+toTime;
 			gteQuery = moment(new Date()).format("YYYY-MM-DD")+startTime;
+			lteQuery = moment(new Date()).format("YYYY-MM-DD")+toTime;
 			query["createdAt"] = {$gte:gteQuery,$lte:lteQuery}
 		}
 		else if(jobDates.length !== 0 && jobDates === '1') {
@@ -85,8 +85,8 @@ exports.findAllJobs = function(req,res){
 			var yesterday = new Date(today);
 			yesterday.setDate(today.getDate()-1);
 
-			lteQuery = moment(yesterday).format("YYYY-MM-DD")+toTime;
 			gteQuery = moment(yesterday).format("YYYY-MM-DD")+startTime;
+			lteQuery = moment(yesterday).format("YYYY-MM-DD")+toTime;
 
 			query["createdAt"] = {$gte:gteQuery,$lte:lteQuery}
 		}
@@ -99,104 +99,34 @@ exports.findAllJobs = function(req,res){
 		else if(jobDates.length !== 0 && jobDates === '3') {	
 
 			gteQuery = moment().subtract(1, 'weeks').startOf('isoweek').format("YYYY-MM-DD")+startTime;
-			lteQuery =  moment().subtract(1, 'weeks').startOf('isoweek').format("YYYY-MM-DD")+toTime;
+			lteQuery =  moment().subtract(1, 'weeks').endOf('isoweek').format("YYYY-MM-DD")+toTime;
 			query["createdAt"] = {$gte:gteQuery,$lte:lteQuery}
 		}
 		else if(jobDates.length !== 0 && jobDates === '4') {
 		
-			var startOfMonth = moment().startOf('month').format("YYYY-MM-DD")+startTime;
-            var endOfMonth   = moment().endOf('month').format("YYYY-MM-DD")+toTime;         
-
-			lteQuery = moment().endOf('month').format("YYYY-MM-DD")+toTime;
 			gteQuery = moment().startOf('month').format("YYYY-MM-DD")+startTime;
-
+            lteQuery   = moment().endOf('month').format("YYYY-MM-DD")+toTime;  
 			query["createdAt"] = {$gte:gteQuery,$lte:lteQuery}
 		}
 		else if(jobDates.length !== 0 && jobDates === '5') {
 
-			lteQuery = moment().subtract(1, 'months').startOf('month').format("YYYY-MM-DD")+toTime;
-			gteQuery = moment().subtract(1, 'months').startOf('month').format("YYYY-MM-DD")+startTime;
-
+			lteQuery = moment().subtract(1, 'months').startOf('month').format("YYYY-MM-DD")+startTime;
+			gteQuery = moment().subtract(1, 'months').endOf('month').format("YYYY-MM-DD")+toTime;
 			query["createdAt"] = {$gte:gteQuery,$lte:lteQuery}
 		}
 		else if(jobDates.length !== 0 && jobDates === '6') {
 
-		  var startOfYear = moment().startOf('year').format("YYYY-MM-DD")+startTime;
-          var endOfYear   = moment().endOf('year').format("YYYY-MM-DD")+toTime;           
-
-		  lteQuery = moment().endOf('year').format("YYYY-MM-DD")+toTime;
-		  gteQuery = moment().startOf('year').format("YYYY-MM-DD")+startTime;;
-
-			query["createdAt"] = {$gte:gteQuery,$lte:lteQuery}
+		  gteQuery = moment().startOf('year').format("YYYY-MM-DD")+startTime;
+          lteQuery   = moment().endOf('year').format("YYYY-MM-DD")+toTime; 
+		  query["createdAt"] = {$gte:gteQuery,$lte:lteQuery}
 		}
 		if(jobStatus.length !== 0 && jobStatus !== '0') query["JobStatus"] = Number(jobStatus);
-		if(customer.length !== 0 && customer !== '0')  query["CustomerDetails.FirstName"] = customer;
+		if(customer && customer.length !== 0 && customer !== '0')  query["CustomerDetails.FirstName"] = customer;
 		if(fieldForce.length !== 0 && fieldForce !== '0') query["EmployeeDetails.EmployeeId"] = fieldForce;
-		if(phone.length !== 0 && phone !== '0') query["CustomerDetails.PrimaryPhone"] = Number(phone);
+		if(phone && phone.length !== 0 && phone !== '0') query["CustomerDetails.PrimaryPhone"] = Number(phone);
 		if(jobId.length !== 0 && jobId !== '0') query["JobId"] = jobId;
-
-	}
+	}	
 	
-	// if(req.param('fromDate') && req.param('toDate')){
-
-	// 	var fromDate = req.param('fromDate');
-	// 	var toDate = req.param('toDate');
-		
-	// 	gteQuery = new Date(fromDate).toISOString();
-	// 	if(fromDate == toDate){
-	// 		lteQuery = new Date(toDate).toISOString();
-	// 	}
-	// 	else{
-	// 		lteQuery = new Date(toDate).toISOString();
-	// 	}
-	   
-	// 	query = {"createdAt":{$gte:gteQuery,$lte:lteQuery}}		
-	// }
-	// else if(req.param('JobStatus')){
-	// 	var jobStatusCode;
-	// 	if(req.param('JobStatus') === 'NotCompleted'){
-	// 		jobStatusCode = 4;
-	// 		query = { "JobStatus": { $not: { $eq: jobStatusCode } } }; // completed job status is 4
-	// 	}
-	// 	else if(req.param('JobStatus') === '6'){
-	// 		jobStatusCode = 6;
-	// 		query = { "JobStatus": { $eq: jobStatusCode } } ;
-	// 	}
-	// 	else if(req.param('JobStatus') === '5'){
-	// 		jobStatusCode = 5;
-	// 		query = { "JobStatus": { $eq: jobStatusCode } } ;
-	// 	}
-	// 	else if(req.param('JobStatus') === '4'){
-	// 		jobStatusCode = 4;
-	// 		query = { "JobStatus": { $eq: jobStatusCode } } ;
-	// 	}
-	// 	else if(req.param('JobStatus') === '3'){
-	// 		jobStatusCode = 3;
-	// 		query = { "JobStatus": { $eq: jobStatusCode } } ;
-	// 	}
-	// 	else if(req.param('JobStatus') === '2'){
-	// 		jobStatusCode = 2;
-	// 		query = { "JobStatus": { $eq: jobStatusCode } } ;
-	// 	}
-	// 	else if(req.param('JobStatus') === '1'){
-	// 		jobStatusCode = 1;
-	// 		query = { "JobStatus": { $eq: jobStatusCode } } ;
-	// 	}
-	// 	else if(req.param('JobStatus') === '0'){
-	// 		jobStatusCode = 0;
-	// 		query = { "JobStatus": { $eq: jobStatusCode } } ;
-	// 	}	
-		
-	// }
-	// else if(req.param('FieldForce')){
-	// 	query = {"EmployeeDetails.EmployeeId":req.param('FieldForce')}
-	// }
-	// else if(req.param('JobLocation')){
-	// 	query = {"CustomerDetails.Location":req.param('JobLocation')}
-	// }	
-	// else{
-	// 	query = {}
-	// }
 	jobModel.find(query,function(err,profile){
 			if(err) return res.send(err);
 			res.send(profile);		

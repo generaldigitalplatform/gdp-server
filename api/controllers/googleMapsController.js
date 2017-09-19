@@ -28,8 +28,10 @@ exports.findGeoLocation = function(req,res){
 	var geocoder = NodeGeocoder(payload);
 
 	geocoder.reverse({lat:lat, lon:lng}, function(err, response) {
+		if(err){
+			res.json(error);
+		}
 	// });
-
 
 	// var options = {     
  //        uri:db.googlemapsapi + lat + ',' + lng,
@@ -39,7 +41,6 @@ exports.findGeoLocation = function(req,res){
 
  //    reqprom(options)
  //    	.then(function(response){
-
 			if(response.length > 0){
 
 	    	var address = response[0].formattedAddress;
