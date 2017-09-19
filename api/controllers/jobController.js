@@ -132,28 +132,7 @@ exports.findAllJobs = function(req,res){
 			res.send(profile);		
 	});
 };
-exports.findJobsBy = function(req,res){
-	res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	var lteQuery;
-	var gteQuery;
-	gteQuery = new Date(req.body.fromDate).toISOString();
-	if(req.body.fromDate == req.body.toDate){
-		lteQuery = new Date(req.body.toDate).toISOString();
-	}
-	else{
-		lteQuery = new Date(req.body.toDate).toISOString();
-	}
-   
-	query = {"createdAt":{$gte:gteQuery,$lte:lteQuery}}
 
-//	var query = { "JobStatus": { $not: { $eq: 4 } } }; // completed job status is 4
-	
-	jobModel.find(query,function(err,profile){
-			if(err) return res.send(err);
-			res.send(profile);		
-	});
-};
 exports.findJobById = function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -190,21 +169,16 @@ exports.searchJobById = function(req,res){
 var query =[	
 	{$match:{
 		$and:[
-	 // {"CustomerDetails.Location":req.body.location},
-	 // {"CustomerDetails.FirstName":req.body.firstname},
-	 // {"CustomerDetails.PrimaryPhone":Number(req.body.primaryphone)},
-	 // {"JobId":Number(req.body.jobid)},
-	 // {"JobScheduledTime":req.body.scheduledtime}
 	]}}];
 
 if(req.body.employeeid){
 	query[0].$match.$and.push({"EmployeeDetails.EmployeeId":req.body.employeeid});
 }
 if(req.body.location){
-	query[0].$match.$and.push({"CustomerDetails.Location":req.body.location});
+	query[0].$match.$and.push({"CustomerDetails.Location":{ $regex : new RegExp(req.body.location, "i")}});
 }
 if(req.body.firstname){
-	query[0].$match.$and.push({"CustomerDetails.FirstName":req.body.firstname});
+	query[0].$match.$and.push({"CustomerDetails.FirstName":{ $regex : new RegExp(req.body.firstname, "i")}});
 }
 if(req.body.primaryphone){
 	query[0].$match.$and.push({"CustomerDetails.PrimaryPhone":Number(req.body.primaryphone)});
